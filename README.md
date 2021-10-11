@@ -1,4 +1,4 @@
-#Super Market
+# Super Market
 
 A java console application to manage a supermarket's operations like managing inventory, billing, employees, customers and Payments.
 
@@ -8,14 +8,14 @@ The java documentation for the application - [Documentation](docs/index.html).
 
 The application has 2 modes of operations, user and admin mode.
 
-##Application Features
+## Application Features
 
-###User
+### User
 * Generate new bills 
 * View all the products in the inventory
 * can add new customers
 
-###Admin
+### Admin
 * Add new Employee to the supermarket
 * Remove an Employee from supermarket
 * View all the employees in the supermarket
