@@ -1,5 +1,8 @@
 package inventory;
 
+/**
+ * Contains all the attributes of a product.
+ */
 public class Product {
     private int id;
     private String name;

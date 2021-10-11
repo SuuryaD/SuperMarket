@@ -1,7 +1,6 @@
 package bill;
 
-import inventory.Inventory;
-import inventory.InventoryItem;
+
 import util.Globals;
 
 import java.text.DateFormat;
@@ -11,6 +10,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Bill Class contains all the information related to a bill.
+ * Holds list of all items added.
+ */
 public class Bill {
     private static int NUMBER = 1;
     private final int id;
@@ -20,6 +23,11 @@ public class Bill {
     private final int  employeeId;
     private final String employeeName;
 
+    /**
+     * Initializes all the properties of the bill.
+     * @param employeeId
+     * @param name
+     */
     public Bill(int employeeId, String name){
         id = NUMBER;
         NUMBER++;
@@ -30,41 +38,21 @@ public class Bill {
         this.employeeName = name;
     }
 
+    /**
+     *
+     * @return List of Bill items.
+     */
     public List<BillItem> getBillItems() {
         return billItems;
     }
 
-    public void addItem(InventoryItem item, int quantity){
-
-        for(BillItem bItem : billItems){
-            if(bItem.getProduct().getId() == item.getProduct().getId()){
-                bItem.setQuantity(bItem.getQuantity() + quantity);
-                Inventory.reduceStock(item.getProduct().getId(), quantity);
-                amount += bItem.getPrice();
-                return;
-            }
-        }
-        BillItem billItem = new BillItem(item.getProduct(), quantity);
-        billItems.add(billItem);
-        amount += billItem.getPrice();
-        Inventory.reduceStock(item.getProduct().getId(), quantity);
-
-    }
-
-    public void removeProduct(int itemNo){
-
-        Inventory.updateStock(billItems.get(itemNo - 1).getProduct().getId(), billItems.get(itemNo - 1).getQuantity());
-        amount -= billItems.get(itemNo - 1).getPrice();
-        billItems.remove(itemNo - 1);
-
-    }
-
-    public void displayBill(){
-
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
 
         DateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm a");
-        System.out.println("Bill ID: " + id + "\t Time: " + sdf.format(currentDate));
-        System.out.println("Employee Id: " + employeeId + "\t Employee Name: " + employeeName);
+        builder.append("Bill ID: ").append(id).append("\t Time: ").append(sdf.format(currentDate)).append("\n");
+        builder.append("Employee Id: ").append(employeeId).append("\t Employee Name: ").append(employeeName).append("\n");
 
         ArrayList<String> headers = new ArrayList<>();
         headers.add("Item No");
@@ -84,16 +72,19 @@ public class Bill {
                     String.valueOf(billItem.getPrice())
             )));
         }
-        Globals.printTable(headers, content);
-        System.out.println("Total Amount: " + Math.round(amount * 100.0)/100.0);
+        builder.append(Globals.printTable(headers, content)).append("\n");
+        builder.append("Total Amount: ").append(Math.round(amount * 100.0) / 100.0).append("\n");
+
+        return builder.toString();
     }
 
-    public  void cancelBill(){
 
-        for(BillItem item : billItems){
-            Inventory.updateStock(item.getProduct().getId(), item.getQuantity());
-        }
-        billItems.clear();
+
+    public double getAmount() {
+        return amount;
     }
 
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
 }

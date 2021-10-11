@@ -7,8 +7,15 @@ import util.Initialization;
 
 import java.io.IOException;
 
+/**
+ * Main class where the program execution starts.
+ */
 public class HyperMarket {
 
+    /**
+     * gets the username and pass from user and redirects accordingly
+     * @param args command line args
+     */
     public static void main(String[] args){
 
         Initialization.initialiseInventory();
@@ -16,6 +23,7 @@ public class HyperMarket {
         String username;
         String pass;
         try{
+
             do{
                 System.out.println("Enter the username: ");
                 username = Globals.input.readLine();
@@ -30,7 +38,6 @@ public class HyperMarket {
                         System.out.println("Something went wrong");
                         continue;
                     }
-
                     if(String.valueOf(emp.isAdmin()).equals("ADMIN"))
                         new Admin(emp).menu();
                     else

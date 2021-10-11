@@ -1,5 +1,9 @@
 package inventory;
 
+
+/**
+ * class contains details of an item in inventory.
+ */
 public class InventoryItem {
 
     private Product product;
@@ -14,9 +18,6 @@ public class InventoryItem {
         return product;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
 
     public int getQuantity() {
         return quantity;

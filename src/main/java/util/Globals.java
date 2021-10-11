@@ -4,12 +4,20 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.*;
 
-
+/**
+ * Contains all the utility functions
+ */
 public class Globals {
 
     public static final BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
-    public static void printTable(ArrayList<String> headers, ArrayList<ArrayList<String>> table) {
+    /**
+     * Prints the given values in a table format
+     * @param headers contains column headers of the table.
+     * @param table contains the contents of table.
+     * @return a table in the string format.
+     */
+    public static String printTable(ArrayList<String> headers, ArrayList<ArrayList<String>> table) {
 
         ArrayList<Integer> maxLength = new ArrayList<>();
 
@@ -36,11 +44,11 @@ public class Globals {
             padder += " ";
         }
 
-        //Create the rowSeperator
+        //Create the rowSeparator
         for (Integer integer : maxLength) {
             sbRowSep.append("|");
             for (int j = 0; j < integer + (TABLEPADDING * 2); j++) {
-//                char SEPERATOR_CHAR = '-';
+//                char SEPARATOR_CHAR = '-';
                 sbRowSep.append("-");
             }
         }
@@ -83,9 +91,7 @@ public class Globals {
             sb.append(rowSeperator);
             sb.append("\n");
         }
-        System.out.println(sb);
+        return sb.toString();
     }
-
-
 
 }

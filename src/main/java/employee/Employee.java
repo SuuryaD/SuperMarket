@@ -1,18 +1,20 @@
 package employee;
 
+/**
+ * Contains all the details of an employee.
+ */
 public class Employee {
 
      enum Level{
         USER,
         ADMIN
-    }
+     }
 
     private static int NUMBER = 1;
     private final int id;
     private final String name;
     private final String username;
     private final String Password;
-
     private final Level level;
 
     public Employee( String name, String username, String password, boolean isAdmin) {

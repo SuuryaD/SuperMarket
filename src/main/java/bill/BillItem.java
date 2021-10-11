@@ -2,13 +2,14 @@ package bill;
 
 import inventory.Product;
 
+/**
+ * Contains the values of each bill item.
+ */
 public class BillItem  {
 
-    private Product product;
+    private final Product product;
     private int quantity;
     private double price;
-
-
 
     public BillItem(Product product, int quantity) {
         this.product = product;
@@ -34,4 +35,5 @@ public class BillItem  {
         price = Math.round(price * 100.0)/100.0;
         return price;
     }
+
 }

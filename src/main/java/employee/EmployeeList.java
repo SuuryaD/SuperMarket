@@ -7,10 +7,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Static class that Contains the list of all employees.
+ */
 public class EmployeeList {
 
     private static final List<Employee> employeeList = new ArrayList<>();
 
+    /**
+     * Authenticates the user
+     * @param username username of employee
+     * @param pass password of an employee
+     * @return true if the credentials match, else false.
+     */
     public static boolean authenticate(String username, String pass){
 
         for(Employee emp : employeeList){
@@ -21,12 +30,16 @@ public class EmployeeList {
         return false;
     }
 
+    /**
+     * Returns the employee object with the given username.
+     * @param username username of the employee
+     * @return employee object if username matches, else returns null.
+     */
     public static @Nullable Employee getEmployee(String username){
 
         for(Employee emp : employeeList){
             if(emp.getUsername().equals(username))
                 return emp;
-
         }
         return null;
     }
@@ -37,6 +50,11 @@ public class EmployeeList {
 
     }
 
+    /**
+     * Checks if a username is available or taken.
+     * @param username string to be checked
+     * @return true if username is available, else returns false.
+     */
     public static boolean checkUsernameAvailability(String username) {
         for(Employee emp : employeeList){
             if(emp.getUsername().equals(username))
@@ -45,6 +63,9 @@ public class EmployeeList {
         return true;
     }
 
+    /**
+     * Displays all the employees details in a tabular form.
+     */
     public static void displayAll(){
         ArrayList<String> headers = new ArrayList<>();
         headers.add("Employee Id");
@@ -54,16 +75,21 @@ public class EmployeeList {
         ArrayList<ArrayList<String>> content = new ArrayList<>();
         for(Employee emp : employeeList){
 
-            content.add(new ArrayList<String>(Arrays.asList(
+            content.add(new ArrayList<>(Arrays.asList(
                     String.valueOf(emp.getId()),
                     emp.getName(),
                     String.valueOf(emp.isAdmin())
             )));
 
         }
-        Globals.printTable(headers, content);
+        System.out.println(Globals.printTable(headers, content));
     }
 
+    /**
+     * Removes an employee from the list of employees.
+     * @param id id of the employee to be removed.
+     * @return true if the employee is removed
+     */
     public static boolean removeEmployee(int id){
 
         for(Employee emp: employeeList){
