@@ -4,7 +4,7 @@ A java console application to manage a supermarket's operations like managing in
 
 Run the application by running [HyperMarket](src/main/java/main/HyperMarket.java).
 
-The java documentation for the application - [Documentation](docs/index.html).
+Refer the Docs for java documentation of the application.
 
 The application has 2 modes of operations, user and admin mode.
 
@@ -37,6 +37,5 @@ The application has 2 modes of operations, user and admin mode.
   ```
   Type "1" for billing.
 * "0" is a reserved keyword. To exit or go back to the previous menu press 0
-* use **admin** as username and password to login for the first time.
 
 

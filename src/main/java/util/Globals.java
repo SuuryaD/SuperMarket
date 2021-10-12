@@ -2,7 +2,7 @@ package util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * Contains all the utility functions
@@ -11,13 +11,30 @@ public class Globals {
 
     public static final BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
-    /**
-     * Prints the given values in a table format
-     * @param headers contains column headers of the table.
-     * @param table contains the contents of table.
-     * @return a table in the string format.
-     */
-    public static String printTable(ArrayList<String> headers, ArrayList<ArrayList<String>> table) {
+  //    public static String readLine() throws IOException {
+  //        return input.readLine();
+  //    }
+  //
+  //    public static String readLine(Validation ...validations) throws IOException,
+  // ValidationException {
+  //        String in = input.readLine();
+  //
+  //        for (Validation validation : validations) {
+  //            if (!validation.isValid(in)) {
+  //                throw new ValidationException();
+  //            }
+  //        }
+  //        return in;
+  //    }
+
+  /**
+   * Prints the given values in a table format
+   *
+   * @param headers contains column headers of the table.
+   * @param table contains the contents of table.
+   * @return a table in the string format.
+   */
+  public static String printTable(ArrayList<String> headers, ArrayList<ArrayList<String>> table) {
 
         ArrayList<Integer> maxLength = new ArrayList<>();
 
