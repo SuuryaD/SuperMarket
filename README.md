@@ -6,7 +6,7 @@ Run the application by running [HyperMarket](src/main/java/main/HyperMarket.java
 
 Refer the Docs for java documentation of the application.
 
-The application has 2 modes of operations, user and admin mode.
+The application has 2 modes of operations, Cashier and admin mode.
 
 ## Application Features
 
