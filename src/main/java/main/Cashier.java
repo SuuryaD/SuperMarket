@@ -1,11 +1,12 @@
 package main;
 
 import bill.Bill;
+import bill.BillController;
+import bill.BillRepository;
 import customer.Customer;
 import customer.CustomerList;
 import employee.Employee;
-import inventory.Inventory;
-import inventory.InventoryItem;
+import inventory.*;
 import util.Globals;
 
 import java.io.IOException;
@@ -14,10 +15,13 @@ import java.io.IOException;
 public class Cashier {
 
   private final Employee employee;
-
+  private final InventoryController inventoryController;
+  private final BillController billController;
   public Cashier(Employee employee) {
 
     this.employee = employee;
+    this.inventoryController = new InventoryController();
+    this.billController = new BillController();
   }
 
   /** Displays the menu and redirects accordingly */
@@ -36,10 +40,12 @@ public class Cashier {
           case "0":
             return;
           case "1":
-            newBill();
+//            newBill();
+            generateBill(new Customer("surya", "abcdd"));
             break;
+
           case "2":
-            System.out.println(Inventory.getInstance());
+            System.out.println(inventoryController.getAllProducts());
           default:
             System.out.println("Enter a valid option");
             break;
@@ -122,6 +128,7 @@ public class Cashier {
   private void generateBill(Customer customer) throws IOException {
 
     Bill bill = new Bill(employee.getId(), employee.getName());
+    billController.newBill(employee.getId(), employee.getName());
 
     do {
       System.out.println("Menu: ");
@@ -161,7 +168,8 @@ public class Cashier {
 
           if (new Payment().menu()) {
             System.out.println("Payment Successful");
-            customer.addBill(bill);
+//            customer.addBill(bill);
+            BillRepository.addBill(bill);
             return;
           }
           System.out.println("Payment Failed");
@@ -184,45 +192,68 @@ public class Cashier {
 
     InventoryItem item;
     String id;
-    do {
+    do{
       System.out.println("Enter Product id: (Enter 0 to exit)");
       id = Globals.input.readLine();
       if (id.equals("0")) return;
-      try {
-        item = Inventory.getInstance().getProductById(Integer.parseInt(id));
-      } catch (NumberFormatException e) {
-        System.out.println("Enter a valid id.");
-        continue;
-      }
-      if (item != null) break;
 
-      System.out.println("Product does not exist. Enter a valid Product ID");
-    } while (true);
-
-    do {
       System.out.println("Enter the quantity: (Enter 0 to exit) ");
       String quantity = Globals.input.readLine();
-
       if (quantity.equals("0")) return;
-      int quantityInt;
 
-      try {
-        quantityInt = Integer.parseInt(quantity);
-      } catch (NumberFormatException e) {
-        System.out.println("Enter a valid quantity");
-        continue;
-      }
+      try{
 
-      if (quantityInt < 0) {
-        System.out.println("Enter a valid quantity");
-      } else if (item.getQuantity() < quantityInt) {
-        System.out.println(
-            "The requested quantity is not available. Available Quantity is " + item.getQuantity());
-      } else {
-        bill.addItem(item, quantityInt);
+        billController.addProductToBill(Integer.parseInt(id), Integer.parseInt(quantity));
+        System.out.println(billController.displayBill());
         break;
+      }catch (NumberFormatException e){
+        System.out.println("Enter a valid Number");
+      }catch(ValidationException e){
+        System.out.println(e.getMessage());
       }
-    } while (true);
+    }while(true);
+
+//
+//    do {
+//      System.out.println("Enter Product id: (Enter 0 to exit)");
+//      id = Globals.input.readLine();
+//      if (id.equals("0")) return;
+//      try {
+////        item = Inventory.getInstance().getProductById(Integer.parseInt(id));
+//        item = InventoryRepository.getProductById(Integer.parseInt(id));
+//      } catch (NumberFormatException e) {
+//        System.out.println("Enter a valid id.");
+//        continue;
+//      }
+//      if (item != null) break;
+//
+//      System.out.println("Product does not exist. Enter a valid Product ID");
+//    } while (true);
+//
+//    do {
+//      System.out.println("Enter the quantity: (Enter 0 to exit) ");
+//      String quantity = Globals.input.readLine();
+//
+//      if (quantity.equals("0")) return;
+//      int quantityInt;
+//
+//      try {
+//        quantityInt = Integer.parseInt(quantity);
+//      } catch (NumberFormatException e) {
+//        System.out.println("Enter a valid quantity");
+//        continue;
+//      }
+//
+//      if (quantityInt < 0) {
+//        System.out.println("Enter a valid quantity");
+//      } else if (item.getQuantity() < quantityInt) {
+//        System.out.println(
+//            "The requested quantity is not available. Available Quantity is " + item.getQuantity());
+//      } else {
+//        bill.addItem(item, quantityInt);
+//        break;
+//      }
+//    } while (true);
   }
 
   /**
@@ -272,4 +303,7 @@ public class Cashier {
 
     } while (true);
   }
+
+
+
 }

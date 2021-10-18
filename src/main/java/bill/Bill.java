@@ -1,7 +1,9 @@
 package bill;
 
-import inventory.Inventory;
+import inventory.InventoryService;
 import inventory.InventoryItem;
+import inventory.InventoryRepository;
+import inventory.Product;
 import util.Globals;
 
 import java.text.DateFormat;
@@ -15,7 +17,7 @@ import java.util.List;
 public class Bill {
   private static int NUMBER = 1;
   private final int id;
-  private final Date currentDate;
+  private final long currentTime;
   private final List<BillItem> billItems;
   private final int employeeId;
   private final String employeeName;
@@ -30,18 +32,73 @@ public class Bill {
   public Bill(int employeeId, String name) {
     id = NUMBER;
     NUMBER++;
-    currentDate = new Date();
+    currentTime = System.currentTimeMillis();
     billItems = new ArrayList<>();
     amount = 0.0;
     this.employeeId = employeeId;
     this.employeeName = name;
   }
 
+  public Bill(int id, long currentTime, int employeeId, String employeeName, Double amount, List<BillItem> ls){
+    this.id = id;
+    this.currentTime = currentTime;
+    this.employeeId = employeeId;
+    this.employeeName = employeeName;
+    this.amount = amount;
+    this.billItems = ls;
+  }
   /** @return List of Bill items. */
   public List<BillItem> getBillItems() {
     return billItems;
   }
 
+  public int getId() {
+    return id;
+  }
+
+  public long getCurrentTime() {
+    return currentTime;
+  }
+
+  public int getEmployeeId() {
+    return employeeId;
+  }
+
+  public String getEmployeeName() {
+    return employeeName;
+  }
+
+  public boolean checkIfItemIsPresent(int id){
+    for(BillItem item : billItems){
+      if(item.getProduct().getId() == id)
+        return true;
+    }
+    return false;
+  }
+
+  public void setQuantity(int id, int quantity){
+    for(BillItem item : billItems){
+      if (item.getProduct().getId() == id) {
+        item.setQuantity(quantity);
+        amount += item.getPrice() * quantity;
+      }
+
+    }
+  }
+
+  public int getQuantity(int id){
+    for(BillItem item : billItems){
+      if(item.getProduct().getId() == id){
+        return item.getQuantity();
+      }
+    }
+    return 0;
+  }
+
+  public void addNewItem(Product product, int quantity){
+    billItems.add(new BillItem(product, quantity));
+    amount += product.getPrice() * quantity;
+  }
   /**
    * updates the quantity of an item in bill if it already exists or adds a new item to the bill.
    *
@@ -54,7 +111,8 @@ public class Bill {
       if (bItem.getProduct().getId() == item.getProduct().getId()) {
 
         bItem.setQuantity(bItem.getQuantity() + quantity);
-        Inventory.getInstance().reduceStock(item.getProduct().getId(), quantity);
+//        Inventory.getInstance().reduceStock(item.getProduct().getId(), quantity);
+        InventoryRepository.reduceStock(item.getProduct().getId(), quantity);
         amount += item.getProduct().getPrice() * quantity;
         return;
       }
@@ -63,8 +121,11 @@ public class Bill {
     BillItem billItem = new BillItem(item.getProduct(), quantity);
     billItems.add(billItem);
     amount += billItem.getPrice();
-    Inventory.getInstance().reduceStock(item.getProduct().getId(), quantity);
+//    Inventory.getInstance().reduceStock(item.getProduct().getId(), quantity);
+    InventoryRepository.reduceStock(item.getProduct().getId(), quantity);
+
   }
+
 
   /**
    * Removes a product from the bill.
@@ -76,15 +137,17 @@ public class Bill {
 
     if (billItems.get(itemNo - 1).getQuantity() == quantity) {
 
-      Inventory.getInstance()
-          .updateStock(
-              billItems.get(itemNo - 1).getProduct().getId(),
+//      Inventory.getInstance()
+//          .updateStock(
+//              billItems.get(itemNo - 1).getProduct().getId(),
+//              billItems.get(itemNo - 1).getQuantity());
+      InventoryRepository.updateStock(billItems.get(itemNo - 1).getProduct().getId(),
               billItems.get(itemNo - 1).getQuantity());
       amount -= billItems.get(itemNo - 1).getPrice();
       billItems.remove(itemNo - 1);
 
     } else {
-      Inventory.getInstance().updateStock(billItems.get(itemNo - 1).getProduct().getId(), quantity);
+      InventoryService.getInstance().updateStock(billItems.get(itemNo - 1).getProduct().getId(), quantity);
       billItems.get(itemNo - 1).setQuantity(billItems.get(itemNo - 1).getQuantity() - quantity);
       amount -= billItems.get(itemNo - 1).getProduct().getPrice() * quantity;
     }
@@ -94,7 +157,7 @@ public class Bill {
   public void cancelBill() {
 
     for (BillItem item : billItems) {
-      Inventory.getInstance().updateStock(item.getProduct().getId(), item.getQuantity());
+      InventoryService.getInstance().updateStock(item.getProduct().getId(), item.getQuantity());
     }
     billItems.clear();
   }
@@ -102,13 +165,13 @@ public class Bill {
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-
+    Date date = new Date(currentTime);
     DateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm a");
     builder
         .append("Bill ID: ")
         .append(id)
         .append("\t Time: ")
-        .append(sdf.format(currentDate))
+        .append(sdf.format(date))
         .append("\n");
     builder
         .append("Employee Id: ")

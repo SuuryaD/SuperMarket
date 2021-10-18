@@ -1,12 +1,14 @@
 package main;
 
 import bill.Bill;
+import bill.BillRepository;
 import customer.Customer;
 import customer.CustomerList;
 import employee.Employee;
 import employee.EmployeeList;
-import inventory.Inventory;
-import inventory.Product;
+import employee.EmployeeRepository;
+import inventory.InventoryController;
+import inventory.ValidationException;
 import util.Globals;
 
 import java.io.IOException;
@@ -18,9 +20,11 @@ import java.util.List;
 public class Admin {
 
   private final Employee currentEmployee;
+  private InventoryController inventoryController;
 
   public Admin(Employee currentEmployee) {
     this.currentEmployee = currentEmployee;
+    inventoryController = new InventoryController();
   }
 
   /** Displays all the options for admin */
@@ -55,7 +59,7 @@ public class Admin {
             removeEmployee();
             break;
           case "4":
-            System.out.println(Inventory.getInstance());
+            viewAllProducts();
             break;
           case "5":
             addProduct();
@@ -102,8 +106,10 @@ public class Admin {
       System.out.println("Enter the username for " + name + ": ");
       username = Globals.input.readLine();
       if (username.equals("0")) return;
+//      if (username.matches("^[a-zA-Z0-9._+-/!@#$%^&*]+$")
+//          && EmployeeList.getInstance().isUsernameAvailable(username)) break;
       if (username.matches("^[a-zA-Z0-9._+-/!@#$%^&*]+$")
-          && EmployeeList.getInstance().isUsernameAvailable(username)) break;
+          && EmployeeRepository.isUsernameAvailable(username)) break;
       else System.out.println("Username already taken. Enter a different username.");
 
     } while (true);
@@ -114,15 +120,18 @@ public class Admin {
       pass = Globals.input.readLine();
 
       if (pass.equals("0")) return;
-      if (pass.matches("(^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])).{5,20}$")) break;
+      else
+        break;
+//      if (pass.matches("(^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])).{5,20}$")) break;
 
-      System.out.println("Enter a valid password");
+//      System.out.println("Enter a valid password");
     } while (true);
 
     System.out.println("Is a Admin? (y/n)");
     String choice = Globals.input.readLine();
 
-    EmployeeList.getInstance().addEmployee(name, username, pass, "y".equalsIgnoreCase(choice));
+//    EmployeeList.getInstance().addEmployee(name, username, pass, "y".equalsIgnoreCase(choice));
+    EmployeeRepository.addEmployee(name,username,pass, choice.equals("y")?1:0);
     System.out.println("new employee " + name + "added Successfully");
   }
 
@@ -152,7 +161,11 @@ public class Admin {
         continue;
       }
 
-      if (EmployeeList.getInstance().removeEmployee(idNum)) {
+//      if (EmployeeList.getInstance().removeEmployee(idNum)) {
+//        System.out.println("Employee Removed Successfully");
+//        break;
+//      }
+      if (EmployeeRepository.removeEmployee(idNum)) {
         System.out.println("Employee Removed Successfully");
         break;
       }
@@ -172,66 +185,40 @@ public class Admin {
     String name;
     String price;
     String quantity;
+
     do {
-      System.out.println("Enter the product id: (press 0 to exit)");
+
+      System.out.println("Enter the product id: (Enter 0 to exit)");
       id = Globals.input.readLine();
-      if (id.equals("0")) return;
-      try {
-        if (!Inventory.getInstance().isProductAvailable(Integer.parseInt(id))) break;
-      } catch (NumberFormatException e) {
-        System.out.println("Enter a valid number");
-        continue;
-      }
-
-      System.out.println("The product id is already available. Try another id");
-
-    } while (true);
-
-    do {
-
-      System.out.println("Enter the product name: ");
+      if(id.equals("0"))
+        return;
+      System.out.println("Enter the product name:");
       name = Globals.input.readLine();
-
-      if (name.equals("0")) return;
-      if (name.length() > 0) break;
-      System.out.println("Enter a valid product name");
-    } while (true);
-
-    do {
-      System.out.println("Enter the Product price: ");
+      if(name.equals("0"))
+        return;
+      System.out.println("Enter the product price");
       price = Globals.input.readLine();
-
-      if (price.equals("0")) return;
-      try {
-        if (Double.parseDouble(price) > 0) break;
-      } catch (NumberFormatException e) {
-        System.out.println("Enter a valid price");
-        continue;
-      }
-      System.out.println("Price should be greater than 0");
-
-    } while (true);
-
-    do {
-      System.out.println("Enter the product quantity: ");
+      if(price.equals("0"))
+        return;
+      System.out.println("Enter the quantity");
       quantity = Globals.input.readLine();
+      if(quantity.equals("0"))
+        return;
 
-      if (quantity.equals("0")) return;
       try {
-        if (Integer.parseInt(quantity) > 0) break;
-      } catch (NumberFormatException e) {
-        System.out.println("Enter a valid quantity");
-        continue;
+
+       if(inventoryController.addProduct(Integer.parseInt(id), name, Double.parseDouble(price), Integer.parseInt(quantity))){
+         System.out.println("Product Added Successfully");
+         break;
+       }
+       else
+         System.out.println("Adding product failed. Try again.");
+      }catch (NumberFormatException e){
+        System.out.println("Enter a valid number");
+      }catch (ValidationException e){
+        System.out.println(e.getMessage());
       }
-      System.out.println("Quantity must be greater than 0");
-
     } while (true);
-
-    Inventory.getInstance()
-        .add(
-            new Product(Integer.parseInt(id), name, Double.parseDouble(price)),
-            Integer.parseInt(quantity));
-    System.out.println("New Product Added Successfully");
   }
 
   /**
@@ -242,35 +229,33 @@ public class Admin {
   private void restockProduct() throws IOException {
     String id;
     String quantity;
-    do {
+    do{
       System.out.println("Enter the product id");
       id = Globals.input.readLine();
-      if (id.equals("0")) return;
-      try {
-        if (Inventory.getInstance().isProductAvailable(Integer.parseInt(id))) break;
-      } catch (NumberFormatException e) {
-        System.out.println("Enter a valid number");
-        continue;
-      }
-      System.out.println("No such Product available");
-    } while (true);
-
-    do {
-      System.out.println("Enter the quantity");
+      if(id.equals("0"))
+        return;
+      System.out.println("Enter the quantity to be added");
       quantity = Globals.input.readLine();
-      if (quantity.equals("0")) return;
-
-      try {
-        if (Integer.parseInt(quantity) > 0) break;
-      } catch (NumberFormatException e) {
-        System.out.println("Enter a valid Number");
-        continue;
+      if(quantity.equals("0"))
+        return;
+      try{
+        if(inventoryController.increaseStock(Integer.parseInt(id), Integer.parseInt(quantity))){
+          System.out.println("Quantity added successfully");
+          break;
+        }
+        else
+          System.out.println("Adding quanitiy failed. Try again");
+      }catch(NumberFormatException e){
+        System.out.println("Enter a valid number");
+      }catch (ValidationException e){
+        System.out.println(e.getMessage());
       }
-      System.out.println("Quantity should be greater than 0");
-    } while (true);
 
-    Inventory.getInstance().updateStock(Integer.parseInt(id), Integer.parseInt(quantity));
-    System.out.println("Product Restock Successful");
+    }while(true);
+  }
+
+  private void viewAllProducts(){
+    System.out.println(inventoryController.getAllProducts());
   }
 
   /**
@@ -279,7 +264,7 @@ public class Admin {
    * @throws IOException input error.
    */
   private void viewAllBills() throws IOException {
-    ArrayList<Bill> bills = new ArrayList<>();
+    List<Bill> bills = BillRepository.getAllBills();
 
     for (Customer customer : CustomerList.getInstance().getCustomerList()) {
       bills.addAll(customer.getBills());

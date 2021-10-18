@@ -13,14 +13,14 @@ public class Payment {
       System.out.println("Payment options");
       System.out.println("1. Card");
       System.out.println("2. UPI");
-      System.out.println("3. Cancel Payment");
+      System.out.println("4. Cancel Payment");
       String option = Globals.input.readLine();
       switch (option) {
         case "1":
           return payWithCard();
         case "2":
           return payWithUpi();
-        case "3":
+        case "4":
           return false;
         default:
           System.out.println("Enter a valid option");

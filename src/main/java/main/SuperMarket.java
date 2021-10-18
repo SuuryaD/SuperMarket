@@ -1,7 +1,7 @@
 package main;
 
 import employee.Employee;
-import employee.EmployeeList;
+import employee.EmployeeRepository;
 import util.Globals;
 import util.Utils;
 
@@ -18,8 +18,14 @@ public class SuperMarket {
   public static void main(String[] args) {
 
     // because we don't have a datastore
-    Utils.initializeTempInventory();
-    Utils.initializeTempEmployeeList();
+    Utils.initializeEmployeeTable();
+
+//    EmployeeRepository.addEmployee( "surya", "dhanush", "pass", 1);
+    Utils.initializeBill();
+    Utils.initializeBillItems();
+//    Utils.initializeTempInventory();
+//    Utils.initializeTempEmployeeList();
+    Utils.initializeInventory();
     Utils.initializeTempCustomerList();
 
     String username;
@@ -41,7 +47,8 @@ public class SuperMarket {
         break;
       }
 
-      Employee emp = EmployeeList.getInstance().authenticate(username, pass);
+//      Employee emp = EmployeeList.getInstance().authenticate(username, pass);
+      Employee emp = EmployeeRepository.getEmployee(username, pass);
       if (emp == null) {
         System.out.println("Credentials incorrect");
         continue;

@@ -36,10 +36,10 @@ public class EmployeeList {
     return null;
   }
 
-  public void addEmployee(String name, String username, String pass, boolean isAdmin) {
-
-    employeeList.add(new Employee(name, username, pass, isAdmin));
-  }
+//  public void addEmployee(String name, String username, String pass, boolean isAdmin) {
+//
+//    employeeList.add(new Employee(name, username, pass, isAdmin));
+//  }
 
   /**
    * Checks if a username is available or taken.
@@ -63,7 +63,7 @@ public class EmployeeList {
     headers.add("Role");
 
     ArrayList<ArrayList<String>> content = new ArrayList<>();
-    for (Employee emp : employeeList) {
+    for (Employee emp : EmployeeRepository.getAll()) {
 
       content.add(
           new ArrayList<>(
