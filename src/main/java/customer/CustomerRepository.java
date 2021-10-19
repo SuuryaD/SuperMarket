@@ -4,16 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** static class contains the list of customers. */
-public class CustomerList {
+public class CustomerRepository {
 
-  private static CustomerList instance;
-  private final List<Customer> customerList = new ArrayList<>();
+  private static CustomerRepository instance;
+  private final List<Customer> customerList;
 
-  public static CustomerList getInstance() {
+  public static CustomerRepository getInstance() {
     if (instance == null) {
-      instance = new CustomerList();
+      instance = new CustomerRepository();
     }
     return instance;
+  }
+
+  public CustomerRepository() {
+    customerList = new ArrayList<>();
+    initialize();
   }
 
   public List<Customer> getCustomerList() {
@@ -35,5 +40,10 @@ public class CustomerList {
       if (customer.getId() == id) return customer;
     }
     return null;
+  }
+
+  private void initialize(){
+    customerList.add(new Customer("surya", "address1"));
+    customerList.add(new Customer("dhanush", "address2"));
   }
 }

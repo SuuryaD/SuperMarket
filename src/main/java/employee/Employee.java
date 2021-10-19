@@ -12,16 +12,18 @@ public class Employee {
   private final String Password;
   private final Level level;
 
-  public Employee(int id,String name, String username, String password, boolean isAdmin) {
-    this.id = id;
+  public Employee(String name, String username, String password, boolean isAdmin) {
+    this.id = NUMBER;
+    NUMBER++;
     this.name = name;
     this.username = username;
-    this.Password = BCrypt.hashpw(password, BCrypt.gensalt(10));
+    this.Password = password;
     if (isAdmin) {
       level = Level.ADMIN;
     } else {
       level = Level.CASHIER;
     }
+
   }
 
   public int getId() {

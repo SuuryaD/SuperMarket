@@ -1,123 +1,66 @@
 package inventory;
 
-import util.ConnectDatabase;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryRepository {
 
-    private static Connection con = ConnectDatabase.getConnection();
-    public  static boolean addProduct(int id, String name, Double price, int quantity){
+    private final List<InventoryItem> inventoryItems;
+    private static InventoryRepository instance;
 
-        try {
-            PreparedStatement stmt = con.prepareStatement("INSERT INTO inventory VALUES(?,?,?,?)");
-
-            stmt.setInt(1, id);
-            stmt.setString(2, name);
-            stmt.setDouble(3, price);
-            stmt.setInt(4, quantity);
-            return stmt.executeUpdate() == 1;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-
+    public static InventoryRepository getInstance(){
+        if(instance == null)
+            instance = new InventoryRepository();
+        return instance;
     }
 
-    public static void reduceStock(int id, int quantity){
-
-        try {
-            PreparedStatement stmt = con.prepareStatement("UPDATE inventory SET quantity=? WHERE id=?");
-            stmt.setInt(1, getQuantity(id) - quantity);
-            stmt.setInt(2, id);
-            stmt.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+    public InventoryRepository(){
+        this.inventoryItems = new ArrayList<>();
+        initializeRepo();
     }
 
-    public static boolean updateStock(int id, int quantity){
-
-        try {
-            PreparedStatement stmt = con.prepareStatement("UPDATE inventory SET quantity=? WHERE id=?");
-            stmt.setInt(1, quantity);
-            stmt.setInt(2, id);
-            return stmt.executeUpdate() == 1;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-
+    public boolean addProduct(int id, String name, Double price, int quantity){
+        return inventoryItems.add(new InventoryItem(new Product(id, name, price), quantity));
     }
 
-    public static int getQuantity(int id){
-        try {
-            PreparedStatement stmt = con.prepareStatement("SELECT quantity FROM inventory WHERE id=?");
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            rs.next();
-            return rs.getInt(1);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
-        }
-    }
-
-    public static InventoryItem getProductById(int id){
-        InventoryItem item = null;
-        try {
-            PreparedStatement stmt = con.prepareStatement("SELECT * FROM inventory WHERE id=?");
-            stmt.setInt(1,id);
-            ResultSet rs = stmt.executeQuery();
-            if(rs.next()){
-                item = new InventoryItem(new Product(rs.getInt(1),rs.getString(2),rs.getDouble(3)),rs.getInt(4));
-            }
-            return item;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static boolean isProductAvailable(int id){
-        try {
-            PreparedStatement stmt = con.prepareStatement("SELECT * FROM inventory WHERE id=?");
-            stmt.setInt(1,id);
-            ResultSet rs = stmt.executeQuery();
-            if(rs.next()){
+    public boolean updateStock(int id, int quantity){
+        for(InventoryItem item : inventoryItems){
+            if(item.getProduct().getId() == id){
+                item.setQuantity(quantity);
                 return true;
             }
-            return false;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
         }
+        return false;
     }
 
-    public static List<InventoryItem> getAllProducts(){
-        List<InventoryItem> ls = new ArrayList<>();
-        try {
-            PreparedStatement stmt = con.prepareStatement("SELECT * FROM inventory");
-            ResultSet rs = stmt.executeQuery();
-
-            while(rs.next()){
-                ls.add(new InventoryItem(new Product(rs.getInt(1), rs.getString(2), rs.getDouble(3)), rs.getInt(4)));
+    public int getQuantity(int id){
+        for(InventoryItem item : inventoryItems){
+            if(item.getProduct().getId() == id){
+                return item.getQuantity();
             }
-            return ls;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return ls;
         }
-
+        return -1;
     }
 
+    public List<InventoryItem> getInventoryItems() {
+        return inventoryItems;
+    }
 
+    public InventoryItem getProductById(int id) {
+        for(InventoryItem item : inventoryItems){
+            if(item.getProduct().getId() == id){
+                return item;
+            }
+        }
+        return null;
+    }
+
+    private void initializeRepo(){
+        inventoryItems.add(new InventoryItem(new Product(1, "toothpaste", 10.23), 25));
+        inventoryItems.add(new InventoryItem(new Product(2, "soap", 5.00), 15));
+        inventoryItems.add(new InventoryItem(new Product(3, "shampoo", 25.50), 30));
+        inventoryItems.add(new InventoryItem(new Product(4, "keyboard", 1.25), 32));
+        inventoryItems.add(new InventoryItem(new Product(5, "mouse", 100.00), 10));
+    }
 }

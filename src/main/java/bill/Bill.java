@@ -21,7 +21,12 @@ public class Bill {
   private final List<BillItem> billItems;
   private final int employeeId;
   private final String employeeName;
+  private final int customerId;
   private double amount;
+
+  public int getCustomerId() {
+    return customerId;
+  }
 
   /**
    * Initializes all the properties of the bill.
@@ -29,7 +34,7 @@ public class Bill {
    * @param employeeId of cashier billing.
    * @param name name of employee
    */
-  public Bill(int employeeId, String name) {
+  public Bill(int employeeId, String name, int customerId) {
     id = NUMBER;
     NUMBER++;
     currentTime = System.currentTimeMillis();
@@ -37,16 +42,9 @@ public class Bill {
     amount = 0.0;
     this.employeeId = employeeId;
     this.employeeName = name;
+    this.customerId = customerId;
   }
 
-  public Bill(int id, long currentTime, int employeeId, String employeeName, Double amount, List<BillItem> ls){
-    this.id = id;
-    this.currentTime = currentTime;
-    this.employeeId = employeeId;
-    this.employeeName = employeeName;
-    this.amount = amount;
-    this.billItems = ls;
-  }
   /** @return List of Bill items. */
   public List<BillItem> getBillItems() {
     return billItems;
@@ -79,8 +77,8 @@ public class Bill {
   public void setQuantity(int id, int quantity){
     for(BillItem item : billItems){
       if (item.getProduct().getId() == id) {
+        amount += item.getPrice() * (item.getQuantity() - quantity);
         item.setQuantity(quantity);
-        amount += item.getPrice() * quantity;
       }
 
     }
@@ -105,26 +103,26 @@ public class Bill {
    * @param item the item that has to be added
    * @param quantity the quantity of the item to be added
    */
-  public void addItem(InventoryItem item, int quantity) {
-
-    for (BillItem bItem : billItems) {
-      if (bItem.getProduct().getId() == item.getProduct().getId()) {
-
-        bItem.setQuantity(bItem.getQuantity() + quantity);
-//        Inventory.getInstance().reduceStock(item.getProduct().getId(), quantity);
-        InventoryRepository.reduceStock(item.getProduct().getId(), quantity);
-        amount += item.getProduct().getPrice() * quantity;
-        return;
-      }
-    }
-
-    BillItem billItem = new BillItem(item.getProduct(), quantity);
-    billItems.add(billItem);
-    amount += billItem.getPrice();
-//    Inventory.getInstance().reduceStock(item.getProduct().getId(), quantity);
-    InventoryRepository.reduceStock(item.getProduct().getId(), quantity);
-
-  }
+//  public void addItem(InventoryItem item, int quantity) {
+//
+//    for (BillItem bItem : billItems) {
+//      if (bItem.getProduct().getId() == item.getProduct().getId()) {
+//
+//        bItem.setQuantity(bItem.getQuantity() + quantity);
+////        Inventory.getInstance().reduceStock(item.getProduct().getId(), quantity);
+//        InventoryRepository.reduceStock(item.getProduct().getId(), quantity);
+//        amount += item.getProduct().getPrice() * quantity;
+//        return;
+//      }
+//    }
+//
+//    BillItem billItem = new BillItem(item.getProduct(), quantity);
+//    billItems.add(billItem);
+//    amount += billItem.getPrice();
+////    Inventory.getInstance().reduceStock(item.getProduct().getId(), quantity);
+//    InventoryRepository.reduceStock(item.getProduct().getId(), quantity);
+//
+//  }
 
 
   /**
@@ -133,34 +131,34 @@ public class Bill {
    * @param itemNo the position of bill item in the bill list.
    * @param quantity the quantity to be removed.
    */
-  public void removeProduct(int itemNo, int quantity) {
-
-    if (billItems.get(itemNo - 1).getQuantity() == quantity) {
-
-//      Inventory.getInstance()
-//          .updateStock(
-//              billItems.get(itemNo - 1).getProduct().getId(),
+//  public void removeProduct(int itemNo, int quantity) {
+//
+//    if (billItems.get(itemNo - 1).getQuantity() == quantity) {
+//
+////      Inventory.getInstance()
+////          .updateStock(
+////              billItems.get(itemNo - 1).getProduct().getId(),
+////              billItems.get(itemNo - 1).getQuantity());
+//      InventoryRepository.updateStock(billItems.get(itemNo - 1).getProduct().getId(),
 //              billItems.get(itemNo - 1).getQuantity());
-      InventoryRepository.updateStock(billItems.get(itemNo - 1).getProduct().getId(),
-              billItems.get(itemNo - 1).getQuantity());
-      amount -= billItems.get(itemNo - 1).getPrice();
-      billItems.remove(itemNo - 1);
-
-    } else {
-      InventoryService.getInstance().updateStock(billItems.get(itemNo - 1).getProduct().getId(), quantity);
-      billItems.get(itemNo - 1).setQuantity(billItems.get(itemNo - 1).getQuantity() - quantity);
-      amount -= billItems.get(itemNo - 1).getProduct().getPrice() * quantity;
-    }
-  }
+//      amount -= billItems.get(itemNo - 1).getPrice();
+//      billItems.remove(itemNo - 1);
+//
+//    } else {
+//      InventoryService.getInstance().updateStock(billItems.get(itemNo - 1).getProduct().getId(), quantity);
+//      billItems.get(itemNo - 1).setQuantity(billItems.get(itemNo - 1).getQuantity() - quantity);
+//      amount -= billItems.get(itemNo - 1).getProduct().getPrice() * quantity;
+//    }
+//  }
 
   /** Cancels the bill and updates the inventory. */
-  public void cancelBill() {
-
-    for (BillItem item : billItems) {
-      InventoryService.getInstance().updateStock(item.getProduct().getId(), item.getQuantity());
-    }
-    billItems.clear();
-  }
+//  public void cancelBill() {
+//
+//    for (BillItem item : billItems) {
+//      InventoryService.getInstance().updateStock(item.getProduct().getId(), item.getQuantity());
+//    }
+//    billItems.clear();
+//  }
 
   @Override
   public String toString() {
@@ -208,5 +206,13 @@ public class Bill {
 
   public double getAmount() {
     return amount;
+  }
+
+  public void removeBillItem(BillItem item) {
+    billItems.removeIf(BillItem -> BillItem == item);
+  }
+
+  public int getBillSize() {
+    return billItems.size();
   }
 }

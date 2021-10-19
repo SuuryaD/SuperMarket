@@ -12,8 +12,13 @@ public class Customer {
   private final int id;
   private final String name;
   private final String address;
+
   private final List<Bill> bills;
   private double totalPurchase;
+
+  public String getAddress() {
+    return address;
+  }
 
   public Customer(String name, String address) {
     id = NUMBER;

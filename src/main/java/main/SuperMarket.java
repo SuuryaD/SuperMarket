@@ -1,9 +1,7 @@
 package main;
 
-import employee.Employee;
-import employee.EmployeeRepository;
+import employee.EmployeeController;
 import util.Globals;
-import util.Utils;
 
 import java.io.IOException;
 
@@ -16,17 +14,6 @@ public class SuperMarket {
    * @param args command line args
    */
   public static void main(String[] args) {
-
-    // because we don't have a datastore
-    Utils.initializeEmployeeTable();
-
-//    EmployeeRepository.addEmployee( "surya", "dhanush", "pass", 1);
-    Utils.initializeBill();
-    Utils.initializeBillItems();
-//    Utils.initializeTempInventory();
-//    Utils.initializeTempEmployeeList();
-    Utils.initializeInventory();
-    Utils.initializeTempCustomerList();
 
     String username;
     String pass;
@@ -46,18 +33,17 @@ public class SuperMarket {
         e.printStackTrace();
         break;
       }
+      int type = new EmployeeController().authenticate(username, pass);
+      if (type == 0) {
 
-//      Employee emp = EmployeeList.getInstance().authenticate(username, pass);
-      Employee emp = EmployeeRepository.getEmployee(username, pass);
-      if (emp == null) {
         System.out.println("Credentials incorrect");
         continue;
       }
 
-      if (emp.isAdmin()) {
-        new Admin(emp).menu();
+      if (type == 1) {
+        new Admin().menu();
       } else {
-        new Cashier(emp).menu();
+        new Cashier().menu();
       }
     } while (true);
   }

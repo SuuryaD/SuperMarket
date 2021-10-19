@@ -37,7 +37,17 @@ public class InventoryController {
         if(quantity < 0)
             throw new ValidationException("Invalid quantity");
 
-        return inventoryService.updateStock(id, quantity);
+        return inventoryService.increaseStock(id, quantity);
+    }
+
+    public boolean reduceStock(int id, int quantity) throws ValidationException {
+        if(id < 0)
+            throw new ValidationException("Ivalid id");
+
+        if(quantity < 0)
+            throw new ValidationException("Invalid quantity");
+
+        return inventoryService.decreaseStock(id, quantity);
     }
 
     public String getAllProducts(){

@@ -1,5 +1,7 @@
 package util;
 
+import employee.Employee;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -10,22 +12,7 @@ import java.util.ArrayList;
 public class Globals {
 
     public static final BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-
-  //    public static String readLine() throws IOException {
-  //        return input.readLine();
-  //    }
-  //
-  //    public static String readLine(Validation ...validations) throws IOException,
-  // ValidationException {
-  //        String in = input.readLine();
-  //
-  //        for (Validation validation : validations) {
-  //            if (!validation.isValid(in)) {
-  //                throw new ValidationException();
-  //            }
-  //        }
-  //        return in;
-  //    }
+    public static Employee loggedIn;
 
   /**
    * Prints the given values in a table format

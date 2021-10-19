@@ -1,30 +1,30 @@
 package main;
 
 import bill.Bill;
-import bill.BillRepository;
-import customer.Customer;
-import customer.CustomerList;
-import employee.Employee;
-import employee.EmployeeList;
-import employee.EmployeeRepository;
+import bill.BillController;
+import customer.CustomerController;
+import employee.EmployeeController;
 import inventory.InventoryController;
 import inventory.ValidationException;
 import util.Globals;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /** Contains all the functionality of an admin */
 public class Admin {
 
-  private final Employee currentEmployee;
-  private InventoryController inventoryController;
+  private final InventoryController inventoryController;
+  private final EmployeeController employeeController;
+  private final BillController billController;
+  private final CustomerController customerController;
 
-  public Admin(Employee currentEmployee) {
-    this.currentEmployee = currentEmployee;
+  public Admin() {
+
     inventoryController = new InventoryController();
+    employeeController = new EmployeeController();
+    billController = new BillController();
+    customerController = new CustomerController();
+
   }
 
   /** Displays all the options for admin */
@@ -50,7 +50,7 @@ public class Admin {
           case "0":
             return;
           case "1":
-            System.out.println(EmployeeList.getInstance());
+            System.out.println(employeeController.displayAllEmployees());
             break;
           case "2":
             addEmployee();
@@ -82,6 +82,7 @@ public class Admin {
     } while (true);
   }
 
+
   /**
    * Adds a new employee to the employee list.
    *
@@ -89,50 +90,36 @@ public class Admin {
    */
   private void addEmployee() throws IOException {
 
-    String name, username, pass;
-    do {
-      System.out.println("Enter the Employee name: (press 0 to return back to previous menu)");
+    String name, username, pass, choice;
+    do{
+      System.out.println("Enter the name of the employee");
       name = Globals.input.readLine();
-
-      if (name.equals("0")) return;
-
-      if (name.matches("^[a-zA-Z]+( [a-zA-Z]+)?$")) break;
-
-      System.out.println("Enter a valid name");
-
-    } while (true);
-
-    do {
-      System.out.println("Enter the username for " + name + ": ");
+      if(name.equals("0"))
+        return;
+      System.out.println("Enter the username of the employee");
       username = Globals.input.readLine();
-      if (username.equals("0")) return;
-//      if (username.matches("^[a-zA-Z0-9._+-/!@#$%^&*]+$")
-//          && EmployeeList.getInstance().isUsernameAvailable(username)) break;
-      if (username.matches("^[a-zA-Z0-9._+-/!@#$%^&*]+$")
-          && EmployeeRepository.isUsernameAvailable(username)) break;
-      else System.out.println("Username already taken. Enter a different username.");
-
-    } while (true);
-
-    do {
-      System.out.println(
-          "Enter the password: (must contain atleast one number, special character, Uppercase Letter");
+      if(username.equals("0"))
+        return;
+      System.out.println("Enter the pass of the employee");
       pass = Globals.input.readLine();
-
-      if (pass.equals("0")) return;
-      else
+      if(pass.equals("0"))
+        return;
+      System.out.println("Is a admin(y/n)?");
+      choice = Globals.input.readLine();
+      if(choice.equals("0"))
+        return;
+      try{
+      if(employeeController.addEmployee(name, username, pass, choice.equals("y")? 1:0)){
+        System.out.println("Employee added successfully");
         break;
-//      if (pass.matches("(^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])).{5,20}$")) break;
+      }
+      System.out.println("Failed. Try again(Enter 0 to exit)");
+      }catch (ValidationException e){
+        System.out.println(e.getMessage());
+      }
 
-//      System.out.println("Enter a valid password");
-    } while (true);
+    }while(true);
 
-    System.out.println("Is a Admin? (y/n)");
-    String choice = Globals.input.readLine();
-
-//    EmployeeList.getInstance().addEmployee(name, username, pass, "y".equalsIgnoreCase(choice));
-    EmployeeRepository.addEmployee(name,username,pass, choice.equals("y")?1:0);
-    System.out.println("new employee " + name + "added Successfully");
   }
 
   /**
@@ -143,36 +130,28 @@ public class Admin {
   private void removeEmployee() throws IOException {
 
     String id;
-    do {
+
+    do{
       System.out.println("Enter the employee Id: ");
       id = Globals.input.readLine();
+      if(id.equals("0"))
+        return;
 
-      int idNum;
-      try {
-        idNum = Integer.parseInt(id);
-      } catch (NumberFormatException e) {
+      try{
+        if(employeeController.removeEmployee(Integer.parseInt(id))){
+          System.out.println("Employee Removed Successfully");
+          break;
+        }
+        System.out.println("Failed to remove employee. Try again");
+      }catch(NumberFormatException e){
         System.out.println("Enter a valid Number");
-        continue;
+      }catch(ValidationException e){
+        System.out.println(e.getMessage());
       }
 
-      if (idNum == 0) return;
-      if (idNum == currentEmployee.getId()) {
-        System.out.println("You cannot delete your own account");
-        continue;
-      }
 
-//      if (EmployeeList.getInstance().removeEmployee(idNum)) {
-//        System.out.println("Employee Removed Successfully");
-//        break;
-//      }
-      if (EmployeeRepository.removeEmployee(idNum)) {
-        System.out.println("Employee Removed Successfully");
-        break;
-      }
+    }while(true);
 
-      System.out.println("Invalid employee id. Enter a valid employee id");
-
-    } while (true);
   }
 
   /**
@@ -264,45 +243,15 @@ public class Admin {
    * @throws IOException input error.
    */
   private void viewAllBills() throws IOException {
-    List<Bill> bills = BillRepository.getAllBills();
-
-    for (Customer customer : CustomerList.getInstance().getCustomerList()) {
-      bills.addAll(customer.getBills());
-    }
-    if (bills.size() == 0) {
-      System.out.println("No bills available");
-      return;
-    }
-
-    viewBills(bills);
+    viewBills(billController.displayAllBills());
   }
 
   /** Displays all customer details in a tabular form */
   private void viewAllCustomers() throws IOException {
 
-    ArrayList<String> headers = new ArrayList<>();
-    ArrayList<ArrayList<String>> content = new ArrayList<>();
-    headers.add("S.No");
-    headers.add("Customer id");
-    headers.add("Customer name");
-    headers.add("No of purchases");
-    headers.add("Total Purchase amount");
-    int no = 1;
-    for (Customer customer : CustomerList.getInstance().getCustomerList()) {
+    do{
 
-      content.add(
-          new ArrayList<>(
-              Arrays.asList(
-                  String.valueOf(no),
-                  String.valueOf(customer.getId()),
-                  customer.getName(),
-                  String.valueOf(customer.getBills().size()),
-                  String.valueOf(customer.getTotalPurchase()))));
-      no++;
-    }
-
-    do {
-      System.out.println(Globals.printTable(headers, content));
+      System.out.println(customerController.displayAllCustomers() );
       System.out.println("1. View Customer bills");
       System.out.println("0. exit");
       String option = Globals.input.readLine();
@@ -310,14 +259,13 @@ public class Admin {
         case "0":
           return;
         case "1":
-          System.out.println("Enter the S.no of Customer");
-          String num = Globals.input.readLine();
+          System.out.println("Enter Customer Id: ");
+          String id = Globals.input.readLine();
+          if(id.equals("0"))
+            return;
           try {
-            viewBills(
-                CustomerList.getInstance()
-                    .getCustomerList()
-                    .get(Integer.parseInt(num) - 1)
-                    .getBills());
+            viewBills(billController.displayCustomerBill(Integer.parseInt(id)));
+//            viewCustomerBills(Integer.parseInt(id));
           } catch (NumberFormatException | IndexOutOfBoundsException e) {
             System.out.println("Enter a valid serial number");
           }
@@ -326,24 +274,25 @@ public class Admin {
           System.out.println("Enter a valid input");
       }
 
-    } while (true);
+    }while (true);
   }
 
   /**
    * Displays all the bills
    *
-   * @param bills to be displayed
+   *
    * @throws IOException invalid input
    */
-  private void viewBills(List<Bill> bills) throws IOException {
+  private void viewBills(List<String> ls) throws IOException {
 
-    if (bills.isEmpty()) {
+
+    if (ls.isEmpty()) {
       System.out.println("No bills available");
       return;
     }
     int i = 0;
     do {
-      System.out.println(bills.get(i));
+      System.out.println(ls.get(i));
       System.out.println("0. exit");
       System.out.println("1. Next");
       System.out.println("2. Previous");
@@ -352,7 +301,7 @@ public class Admin {
         case "0":
           return;
         case "1":
-          if (i < bills.size() - 1) {
+          if (i < ls.size() - 1) {
             i++;
           } else {
             System.out.println("No next Bill");
@@ -370,4 +319,5 @@ public class Admin {
       }
     } while (true);
   }
+
 }
