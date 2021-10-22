@@ -171,13 +171,13 @@ extends java.lang.Object</pre>
        <a href="../inventory/InventoryItem.html" title="class in inventory">InventoryItem</a>&nbsp;item,
        int&nbsp;quantity)</code>
 <div class="block">updates the quantity of an item in bill if it already exists
- or adds a new item to the bill.</div>
+    or adds a new item to the sdk.bill.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../controller/BillController.html#cancelBill-bill.Bill-">cancelBill</a></span>(<a href="../bill/Bill.html" title="class in bill">Bill</a>&nbsp;bill)</code>
-<div class="block">Cancels the bill and updates the inventory.</div>
+<div class="block">Cancels the bill and updates the sdk.inventory.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
@@ -185,7 +185,7 @@ extends java.lang.Object</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../controller/BillController.html#removeProduct-bill.Bill-int-int-">removeProduct</a></span>(<a href="../bill/Bill.html" title="class in bill">Bill</a>&nbsp;bill,
              int&nbsp;itemNo,
              int&nbsp;quantity)</code>
-<div class="block">Removes a product from the bill.</div>
+<div class="block">Removes a product from the sdk.bill.</div>
 </td>
 </tr>
 </table>
@@ -244,7 +244,7 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="addItem-bill.Bill-inventory.InventoryItem-int-">
+<a name="addItem-sdk.bill.Bill-sdk.inventory.InventoryItem-int-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -254,7 +254,7 @@ extends java.lang.Object</pre>
                     <a href="../inventory/InventoryItem.html" title="class in inventory">InventoryItem</a>&nbsp;item,
                     int&nbsp;quantity)</pre>
 <div class="block">updates the quantity of an item in bill if it already exists
- or adds a new item to the bill.</div>
+    or adds a new item to the sdk.bill.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>bill</code> - bill to which the item has to be added.</dd>
@@ -263,7 +263,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="removeProduct-bill.Bill-int-int-">
+<a name="removeProduct-sdk.bill.Bill-int-int-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -272,7 +272,7 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;void&nbsp;removeProduct(<a href="../bill/Bill.html" title="class in bill">Bill</a>&nbsp;bill,
                           int&nbsp;itemNo,
                           int&nbsp;quantity)</pre>
-<div class="block">Removes a product from the bill.</div>
+<div class="block">Removes a product from the sdk.bill.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>bill</code> - bill from which the product has to be removed</dd>
@@ -281,14 +281,14 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="cancelBill-bill.Bill-">
+<a name="cancelBill-sdk.bill.Bill-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>cancelBill</h4>
 <pre>public&nbsp;void&nbsp;cancelBill(<a href="../bill/Bill.html" title="class in bill">Bill</a>&nbsp;bill)</pre>
-<div class="block">Cancels the bill and updates the inventory.</div>
+<div class="block">Cancels the bill and updates the sdk.inventory.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>bill</code> - bill which has to be cancelled.</dd>

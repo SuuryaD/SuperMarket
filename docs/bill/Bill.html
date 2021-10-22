@@ -99,7 +99,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>bill.Bill</li>
+<li>sdk.bill.Bill</li>
 </ul>
 </li>
 </ul>
@@ -110,8 +110,8 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">Bill</span>
 extends java.lang.Object</pre>
-<div class="block">Bill Class contains all the information related to a bill.
- Holds list of all items added.</div>
+<div class="block">Bill Class contains all the information related to a sdk.bill.
+    Holds list of all items added.</div>
 </li>
 </ul>
 </div>
@@ -175,7 +175,7 @@ extends java.lang.Object</pre>
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../bill/Bill.html#Bill-int-java.lang.String-">Bill</a></span>(int&nbsp;employeeId,
     java.lang.String&nbsp;name)</code>
-<div class="block">Initializes all the properties of the bill.</div>
+<div class="block">Initializes all the properties of the sdk.bill.</div>
 </td>
 </tr>
 </table>
@@ -198,13 +198,13 @@ extends java.lang.Object</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../bill/Bill.html#addItem-inventory.InventoryItem-int-">addItem</a></span>(<a href="../inventory/InventoryItem.html" title="class in inventory">InventoryItem</a>&nbsp;item,
        int&nbsp;quantity)</code>
 <div class="block">updates the quantity of an item in bill if it already exists
- or adds a new item to the bill.</div>
+    or adds a new item to the sdk.bill.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../bill/Bill.html#cancelBill--">cancelBill</a></span>()</code>
-<div class="block">Cancels the bill and updates the inventory.</div>
+<div class="block">Cancels the bill and updates the sdk.inventory.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
@@ -219,7 +219,7 @@ extends java.lang.Object</pre>
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../bill/Bill.html#removeProduct-int-int-">removeProduct</a></span>(int&nbsp;itemNo,
              int&nbsp;quantity)</code>
-<div class="block">Removes a product from the bill.</div>
+<div class="block">Removes a product from the sdk.bill.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
@@ -327,7 +327,7 @@ extends java.lang.Object</pre>
 <h4>Bill</h4>
 <pre>public&nbsp;Bill(int&nbsp;employeeId,
             java.lang.String&nbsp;name)</pre>
-<div class="block">Initializes all the properties of the bill.</div>
+<div class="block">Initializes all the properties of the sdk.bill.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>employeeId</code> - </dd>
@@ -356,7 +356,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="addItem-inventory.InventoryItem-int-">
+<a name="addItem-sdk.inventory.InventoryItem-int-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -365,7 +365,7 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;void&nbsp;addItem(<a href="../inventory/InventoryItem.html" title="class in inventory">InventoryItem</a>&nbsp;item,
                     int&nbsp;quantity)</pre>
 <div class="block">updates the quantity of an item in bill if it already exists
- or adds a new item to the bill.</div>
+    or adds a new item to the sdk.bill.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>item</code> - the item that has to be added</dd>
@@ -381,7 +381,7 @@ extends java.lang.Object</pre>
 <h4>removeProduct</h4>
 <pre>public&nbsp;void&nbsp;removeProduct(int&nbsp;itemNo,
                           int&nbsp;quantity)</pre>
-<div class="block">Removes a product from the bill.</div>
+<div class="block">Removes a product from the sdk.bill.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>itemNo</code> - the position of bill item in the bill list.</dd>
@@ -396,7 +396,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>cancelBill</h4>
 <pre>public&nbsp;void&nbsp;cancelBill()</pre>
-<div class="block">Cancels the bill and updates the inventory.</div>
+<div class="block">Cancels the bill and updates the sdk.inventory.</div>
 </li>
 </ul>
 <a name="toString--">

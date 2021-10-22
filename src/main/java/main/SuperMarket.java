@@ -1,7 +1,9 @@
 package main;
 
-import employee.EmployeeController;
-import util.Globals;
+import sdk.employee.Biller;
+import sdk.employee.Employee;
+import sdk.employee.EmployeeController;
+import sdk.employee.Manager;
 
 import java.io.IOException;
 
@@ -9,7 +11,7 @@ import java.io.IOException;
 public class SuperMarket {
 
   /**
-   * gets the username and pass from user and redirects accordingly
+   * gets the username and password from user and redirects accordingly
    *
    * @param args command line args
    */
@@ -17,7 +19,7 @@ public class SuperMarket {
 
     String username;
     String pass;
-
+    EmployeeController employeeController = new EmployeeController();
     do {
       try {
         System.out.println("Enter the username: ");
@@ -29,21 +31,30 @@ public class SuperMarket {
 
         System.out.println("Enter the password: ");
         pass = Globals.input.readLine();
+
       } catch (IOException e) {
         e.printStackTrace();
         break;
       }
-      int type = new EmployeeController().authenticate(username, pass);
-      if (type == 0) {
+      try {
+        Employee emp = employeeController.authenticate(username, pass);
+        if (emp instanceof Manager) {
+          new ManagerUI().menu();
+          employeeController.logout();
+        } else if (emp instanceof Biller) {
+          new BillerUI().menu();
+          employeeController.logout();
+        } else if (emp instanceof sdk.employee.FloorStaff) {
+          new FloorStaffUI().menu();
+          employeeController.logout();
+        } else if (emp instanceof sdk.employee.Cashier) {
+          new CashierUI().menu();
+          employeeController.logout();
+        } else if (emp instanceof sdk.employee.Delivery) new DeliveryUI().menu();
+        employeeController.logout();
 
+      } catch (IllegalArgumentException e) {
         System.out.println("Credentials incorrect");
-        continue;
-      }
-
-      if (type == 1) {
-        new Admin().menu();
-      } else {
-        new Cashier().menu();
       }
     } while (true);
   }
