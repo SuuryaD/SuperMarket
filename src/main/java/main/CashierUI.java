@@ -61,7 +61,7 @@ public class CashierUI {
       int billId;
       try {
         billId = Integer.parseInt(id);
-        System.out.println(new BillController().displayBill(billId));
+        System.out.println(new BillController().printBill(billId));
       } catch (NumberFormatException e) {
         System.out.println("Enter a valid number");
         return;

@@ -21,7 +21,7 @@ public class CustomerRepository {
     initialize();
   }
 
-  public List<Customer> getCustomerList() {
+  public List<Customer> getAllCustomers() {
     return customerList;
   }
 
@@ -40,10 +40,12 @@ public class CustomerRepository {
       if (customer.getId() == id) return customer;
     }
     return null;
+
   }
 
   private void initialize(){
     customerList.add(new Customer("surya", "address1"));
     customerList.add(new Customer("dhanush", "address2"));
   }
+
 }

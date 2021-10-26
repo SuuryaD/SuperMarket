@@ -10,32 +10,34 @@ public class EmployeeController {
     public EmployeeController(){
         employeeService = new EmployeeService();
     }
-    public boolean addEmployee(String name, String username, String pass, int type) throws ValidationException {
 
-        if(type > 5 || type < 0)
-            throw new ValidationException("Enter a valid type of employee.");
+    public boolean addEmployee(String employeeName, String username, String pass, int employeeType) throws ValidationException {
 
-        if (!name.matches("^[a-zA-Z]+( [a-zA-Z]+)?$"))
-            throw new ValidationException("Enter a valid name");
+        if(employeeType > 5 || employeeType <= 0)
+            throw new ValidationException("Enter a valid employeeType of employee.");
+
+        if (!employeeName.matches("^[a-zA-Z]+( [a-zA-Z]+)?$"))
+            throw new ValidationException("Enter a valid employeeName");
 
         if (!username.matches("^[a-zA-Z0-9._+-/!@#$%^&*]+$"))
             throw new ValidationException("Enter a valid username");
 
         if (!pass.matches("(^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])).{5,20}$"))
-            throw new ValidationException("The password must contain atleast on number, capital letter, special charecter");
+            throw new ValidationException("The password must contain atleast one number, capital letter, special character");
 
-        return employeeService.addEmployee(name, username, pass, type);
+        return employeeService.addEmployee(employeeName, username, pass, employeeType);
     }
 
     public boolean removeEmployee(int employeeId) throws ValidationException {
-        if(employeeId < 0)
+
+        if(employeeId <= 0)
             throw new ValidationException("Enter a valid id");
 
         return employeeService.removeEmployee(employeeId);
-
     }
 
     public Employee authenticate(String username, String pass) throws IllegalArgumentException {
+
         return employeeService.authenticate(username, pass);
     }
 

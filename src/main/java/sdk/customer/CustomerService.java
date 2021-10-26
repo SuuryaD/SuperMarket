@@ -10,11 +10,9 @@ import java.util.List;
 public class CustomerService {
 
   private final CustomerRepository customerRepository;
-  private final BillService billservice;
 
   public CustomerService() {
     customerRepository = CustomerRepository.getInstance();
-    billservice = new BillService();
   }
 
   public boolean checkCustomerId(int customerId) {
@@ -28,8 +26,8 @@ public class CustomerService {
     return customer.getId();
   }
 
-  public String displayCustomers() {
-    List<Customer> ls = customerRepository.getCustomerList();
+  public String printAllCustomers(BillService billService) {
+    List<Customer> ls = customerRepository.getAllCustomers();
     ArrayList<String> headers = new ArrayList<>();
     ArrayList<ArrayList<String>> content = new ArrayList<>();
     headers.add("S.No");
@@ -47,11 +45,10 @@ public class CustomerService {
                   String.valueOf(customer.getId()),
                   customer.getName(),
                   customer.getAddress(),
-                  String.valueOf(billservice.getNoOfBills(customer.getId())),
-                  String.valueOf(billservice.getTotalPurchaseOfCustomer(customer.getId())))));
+                  String.valueOf(billService.getNoOfBillsOfCustomer(customer.getId())),
+                  String.valueOf(billService.getTotalPurchaseOfCustomer(customer.getId())))));
       no++;
     }
-
     return Globals.printTable(headers, content);
   }
 }

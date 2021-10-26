@@ -1,5 +1,7 @@
 package sdk.employee;
 
+import java.util.List;
+
 /** Contains all the details of an employee. */
 public abstract class Employee {
 
@@ -15,8 +17,6 @@ public abstract class Employee {
     this.name = name;
     this.username = username;
     this.Password = password;
-
-
   }
 
   public int getId() {
@@ -34,5 +34,9 @@ public abstract class Employee {
   public String getPassword() {
     return Password;
   }
+
+  public abstract void redirect(Visitor visitor);
+
+  public abstract String getRole();
 
 }

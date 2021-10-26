@@ -55,7 +55,6 @@ public class BillerUI {
 
   private void viewAllBills(){
     System.out.println(inventoryController.getAllProducts());
-
   }
 
   private void newBill() throws IOException {
@@ -110,9 +109,7 @@ public class BillerUI {
       } catch (ValidationException e) {
         System.out.println(e.getMessage());
       }
-
     } while (true);
-
   }
 
   /**
@@ -122,8 +119,13 @@ public class BillerUI {
    * @throws IOException raised when invalid input
    */
   private void generateBill(int customerId) throws IOException, ValidationException {
-
-      int billId = billController.newBill(customerId);
+      int billId;
+//      try{
+      billId = billController.newBill(customerId);
+//      }catch (ValidationException e){
+//        System.out.println(e.getMessage());
+//        return;
+//      }
 
     do {
       System.out.println("Menu: ");
@@ -185,8 +187,8 @@ public class BillerUI {
       if (quantity.equals("0")) return;
 
       try {
-        billController.addProductToBill(billId, Integer.parseInt(id), Integer.parseInt(quantity));
-        System.out.println(billController.displayBill(billId));
+        billController.addProduct(billId, Integer.parseInt(id), Integer.parseInt(quantity));
+        System.out.println(billController.printBill(billId));
         break;
       } catch (NumberFormatException e) {
         System.out.println("Enter a valid Number");
@@ -216,7 +218,7 @@ public class BillerUI {
       try {
         if (billController.removeProduct(billId, Integer.parseInt(number), Integer.parseInt(quantity))) {
           System.out.println("The quantity has been removed");
-          System.out.println(billController.displayBill(billId));
+          System.out.println(billController.printBill(billId));
           break;
         } else {
           System.out.println("Something went wrong. Try again");

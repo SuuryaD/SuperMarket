@@ -1,5 +1,6 @@
 package sdk.bill;
 
+import sdk.customer.CustomerService;
 import sdk.util.Globals;
 import sdk.util.ValidationException;
 
@@ -21,7 +22,7 @@ public class BillController {
         return billService.newBill(Globals.currentEmployee.getId(), Globals.currentEmployee.getUsername(), customerId);
     }
 
-    public void addProductToBill(int billId, int productId, int productQuantity) throws ValidationException {
+    public void addProduct(int billId, int productId, int productQuantity) throws ValidationException {
 
         if(billId <= 0)
             throw new ValidationException("Invalid Bill id");
@@ -36,11 +37,11 @@ public class BillController {
 
     }
 
-    public String displayBill(int billId) throws ValidationException {
+    public String printBill(int billId) throws ValidationException {
 
         if(billId < 0)
             throw new ValidationException("Enter a valid Bill id.");
-        return billService.displayBill(billId);
+        return billService.printBill(billId);
     }
 
     public boolean removeProduct(int billId, int productId, int productQuantity) throws ValidationException {
@@ -54,12 +55,12 @@ public class BillController {
         if(productQuantity < 0)
             throw new ValidationException("Invalid Quantity");
 
-        return billService.removeProduct(billId, productId, productQuantity);
+        return billService.removeItem(billId, productId, productQuantity);
     }
 
     public void cancelBill(int billId) throws ValidationException {
         if(billId < 0)
-            throw new ValidationException("Enter a valid Id");
+            throw new ValidationException("Enter a valid Bill Id");
         billService.cancelBill(billId);
     }
 
@@ -67,22 +68,21 @@ public class BillController {
         if(billId <= 0){
             throw new ValidationException("Enter a valid Bill Id");
         }
-
-        return billService.billSize(billId);
+        return billService.isBillEmpty(billId);
     }
 
     public List<String> displayCustomerBill(int customerId){
-        return billService.getCustomerBill(customerId);
+        return billService.printAllBillsOfCustomer(customerId);
     }
 
     public List<String> displayAllBills() {
-        return billService.displayAllBills();
+        return billService.printAllBills();
     }
 
     public boolean isPaid(int billId) throws ValidationException {
         if(billId < 0)
             throw new ValidationException("Enter a valid id");
         return billService.isPaid(billId);
-
     }
+
 }

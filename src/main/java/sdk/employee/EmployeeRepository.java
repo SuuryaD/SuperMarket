@@ -8,6 +8,12 @@ import java.util.List;
 public class EmployeeRepository {
 
   private static EmployeeRepository instance;
+
+  public static EmployeeRepository getInstance() {
+    if (instance == null) instance = new EmployeeRepository();
+    return instance;
+  }
+
   private final List<Employee> employeeList;
 
   public EmployeeRepository() {
@@ -15,21 +21,28 @@ public class EmployeeRepository {
     initializeRepo();
   }
 
-  public static EmployeeRepository getInstance() {
-    if (instance == null) instance = new EmployeeRepository();
-    return instance;
+  public boolean addAdminEmployee(String employeeName, String username, String pass){
+      return employeeList.add(new Manager(employeeName, username, pass));
   }
 
-  public boolean addAdminEmployee(String name, String username, String pass){
-      return employeeList.add(new Manager(name, username, pass));
+  public boolean addCashierEmployee(String employeeName , String username, String pass){
+    return employeeList.add(new Biller(employeeName, username, pass));
   }
 
-  public boolean addCashierEmployee(String name , String username, String pass){
-    return employeeList.add(new Biller(name, username, pass));
+  public boolean addFloorStaffEmployee(String employeeName, String username, String hashpw) {
+    return employeeList.add(new FloorStaff(employeeName,username,hashpw));
   }
 
-  public boolean removeEmployee(int id) {
-    return employeeList.removeIf(employee -> employee.getId() == id);
+  public boolean addBillerEmployee(String employeeName, String username, String hashpw) {
+    return employeeList.add(new Biller(employeeName, username, hashpw));
+  }
+
+  public boolean addDeliveryEmployee(String employeeName, String username, String hashpw) {
+    return employeeList.add(new Delivery(employeeName, username, hashpw));
+  }
+
+  public boolean removeEmployee(int employeeId) {
+    return employeeList.removeIf(employee -> employee.getId() == employeeId);
   }
 
   public Employee getEmployeeByUsername(String username) {
@@ -39,9 +52,9 @@ public class EmployeeRepository {
     return null;
   }
 
-  public Employee getEmployeeById(int id) {
+  public Employee getEmployeeById(int employeeId) {
     for (Employee emp : employeeList) {
-      if (emp.getId() == id) return emp;
+      if (emp.getId() == employeeId) return emp;
     }
     return null;
   }
@@ -59,16 +72,6 @@ public class EmployeeRepository {
 
   }
 
-  public boolean addFloorStaffEmployee(String name, String username, String hashpw) {
-    return employeeList.add(new FloorStaff(name,username,hashpw));
-  }
 
-  public boolean addBiller(String name, String username, String hashpw) {
-    return employeeList.add(new Biller(name, username, hashpw));
-  }
-
-  public boolean addDelivery(String name, String username, String hashpw) {
-    return employeeList.add(new Delivery(name, username, hashpw));
-  }
 }
 

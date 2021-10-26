@@ -11,12 +11,12 @@ public class PaymentService {
     }
 
     public boolean payWithCard(String cardNumber, String cardName, String cardExpiry, int billId) throws ValidationException {
-        billService.confirmPayment(billId);
+        billService.confirmBillPayment(billId);
         return true;
     }
 
     public boolean payWithUpi(String upiId, int billId) throws ValidationException {
-        billService.confirmPayment(billId);
+        billService.confirmBillPayment(billId);
         return true;
     }
 }

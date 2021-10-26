@@ -23,10 +23,9 @@ public class InventoryRepository {
         return inventoryItems.add(new InventoryItem(new Product(productId, productName, productPrice), quantity));
     }
 
-
-    public boolean updateStock(int id, int quantity){
+    public boolean updateStock(int productId, int quantity){
         for(InventoryItem item : inventoryItems){
-            if(item.getProduct().getId() == id){
+            if(item.getProduct().getId() == productId){
                 item.setQuantity(quantity);
                 return true;
             }
@@ -34,22 +33,13 @@ public class InventoryRepository {
         return false;
     }
 
-    public int getQuantity(int productId){
-        for(InventoryItem item : inventoryItems){
-            if(item.getProduct().getId() == productId){
-                return item.getQuantity();
-            }
-        }
-        return -1;
-    }
-
     public List<InventoryItem> getInventoryItems() {
         return inventoryItems;
     }
 
-    public InventoryItem getProductById(int id) {
+    public InventoryItem getProductById(int productId) {
         for(InventoryItem item : inventoryItems){
-            if(item.getProduct().getId() == id){
+            if(item.getProduct().getId() == productId){
                 return item;
             }
         }

@@ -26,16 +26,16 @@ public class Bill {
    * Initializes all the properties of the bill.
    *
    * @param employeeId of cashier billing.
-   * @param name name of employee
+   * @param employeeName Name of employee
    */
-  public Bill(int employeeId, String name, int customerId) {
+  public Bill(int employeeId, String employeeName, int customerId) {
     id = NUMBER;
     NUMBER++;
     currentTime = System.currentTimeMillis();
     billItems = new ArrayList<>();
     amount = 0.0;
     this.employeeId = employeeId;
-    this.employeeName = name;
+    this.employeeName = employeeName;
     this.customerId = customerId;
     paid = false;
   }
@@ -83,6 +83,7 @@ public class Bill {
       amount += item.getPrice();
     }
   }
+
   public int getQuantity(int id) {
     for (BillItem item : billItems) {
       if (item.getProduct().getId() == id) {
@@ -95,7 +96,6 @@ public class Bill {
   public void addNewItem(Product product, int quantity) {
     billItems.add(new BillItem(product, quantity));
     setAmount();
-//    amount += product.getPrice() * quantity;
   }
 
   @Override
@@ -134,10 +134,12 @@ public class Bill {
                   billItem.getProduct().getName(),
                   String.valueOf(billItem.getQuantity()),
                   String.valueOf(billItem.getProduct().getPrice()),
-                  String.valueOf(billItem.getPrice()))));
+                  String.valueOf(String.format("%.2f", billItem.getPrice()))
+              )));
     }
     builder.append(Globals.printTable(headers, content)).append("\n");
-    builder.append("Total Amount: ").append(Math.round(amount * 100.0) / 100.0).append("\n");
+//    builder.append("Total Amount: ").append(Math.round(amount * 100.0) / 100.0).append("\n");
+    builder.append("Total Amount: ").append(String.format("%.2f", amount)).append("\n");
 
     return builder.toString();
   }
@@ -148,6 +150,7 @@ public class Bill {
 
   public void removeBillItem(BillItem item) {
     billItems.removeIf(BillItem -> BillItem == item);
+    setAmount();
   }
 
   public int getBillSize() {

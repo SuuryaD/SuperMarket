@@ -1,10 +1,11 @@
 package sdk.customer;
 
+import sdk.bill.BillService;
 import sdk.util.ValidationException;
 
 public class CustomerController {
 
-  private CustomerService customerService;
+  private final CustomerService customerService;
 
   public CustomerController() {
     customerService = new CustomerService();
@@ -12,9 +13,10 @@ public class CustomerController {
 
   public boolean checkCustomerId(int customerId) throws ValidationException {
 
-    if (customerId < 0) throw new ValidationException("Invalid id");
+    if (customerId <= 0) throw new ValidationException("Invalid id");
 
     return customerService.checkCustomerId(customerId);
+
   }
 
   public int addNewCustomer(String name, String address) throws ValidationException {
@@ -22,11 +24,10 @@ public class CustomerController {
       throw new ValidationException("Enter a valid name");
 
     if (address.length() == 0) throw new ValidationException("Enter a valid address");
-
     return customerService.addCustomer(name, address);
   }
 
   public String displayAllCustomers() {
-    return customerService.displayCustomers();
+    return customerService.printAllCustomers(new BillService());
   }
 }

@@ -18,22 +18,8 @@ public class BillRepository {
         this.bills = new ArrayList<>();
     }
 
-    public void addBill(Bill bill){
-        bills.add(bill);
-    }
-
     public List<Bill> getAllBills(){
         return bills;
-    }
-
-    public int getNoOfBillsOfCustomer(int customerId){
-        int cnt = 0;
-        for(Bill bill : bills){
-            if(bill.getCustomerId() == customerId){
-                cnt++;
-            }
-        }
-        return cnt;
     }
 
     public List<Bill> getAllBillsOfCustomer(int customerId) {
@@ -46,7 +32,7 @@ public class BillRepository {
         return ls;
     }
 
-    public Bill getBill(int billId){
+    public Bill getBillById(int billId){
         for(Bill bill : bills){
             if(bill.getId() == billId)
                 return bill;

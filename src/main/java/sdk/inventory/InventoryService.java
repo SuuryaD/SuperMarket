@@ -5,74 +5,71 @@ import sdk.util.ValidationException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /** Singleton Class to hold a list of all the items in the inventory */
 public class InventoryService {
 
-  private InventoryRepository inventoryRepository;
+  private final InventoryRepository inventoryRepository;
 
   public InventoryService(){
     inventoryRepository = InventoryRepository.getInstance();
   }
 
 
-  public boolean add(int productId, String productName, Double productPrice, int quantity) throws ValidationException {
+  public boolean addNewProduct(int productId, String productName, Double productPrice, int quantity) throws ValidationException {
 
     if(isProductAvailable(productId)){
       throw new ValidationException("Product Id is already taken");
     }
-
     return inventoryRepository.addProduct(productId, productName, productPrice, quantity);
   }
 
 
 
   /**
-   * updates the quantityToBeIncreased of the product
+   * updates the quantity of the product
    *
    * @param productId productId of the product
-   * @param quantityToBeIncreased the quantityToBeIncreased to be added.
+   * @param quantity the quantity to be added.
    */
-  public boolean increaseStock(int productId, int quantityToBeIncreased) throws ValidationException {
+  public boolean increaseStock(int productId, int quantity) throws ValidationException {
     if(!isProductAvailable(productId)){
       throw new ValidationException("The product Id is invalid");
     }
-    int finalQuantity = getQuantity(productId) + quantityToBeIncreased;
+    int finalQuantity = getProductQuantity(productId) + quantity;
     return inventoryRepository.updateStock(productId,finalQuantity);
   }
 
-  public boolean decreaseStock(int id, int quantity){
-    if(!isProductAvailable(id)){
-      return false;
+  public boolean decreaseStock(int productId, int quantity) throws ValidationException {
+    if(!isProductAvailable(productId)){
+      throw new ValidationException("The product Id is invalid");
     }
-    int finalQuantity = getQuantity(id) - quantity;
-    return inventoryRepository.updateStock(id,finalQuantity);
+    int finalQuantity = getProductQuantity(productId) - quantity;
+    return inventoryRepository.updateStock(productId,finalQuantity);
   }
 
-  public int getQuantity(int productId){
-    return inventoryRepository.getQuantity(productId);
-  }
-
-  public List<InventoryItem> getAllItems(){
-    return inventoryRepository.getInventoryItems();
+  public Product getProduct(int productId) throws ValidationException {
+    InventoryItem item = inventoryRepository.getProductById(productId);
+    if(item == null)
+      throw new ValidationException("Invalid product id");
+    return item.getProduct();
   }
 
   /**
    * Check if a product is available in inventory.
    *
-   * @param id id of the product to be checked.
+   * @param productId productId of the product to be checked.
    * @return true if the product is present.
    */
-  public boolean isProductAvailable(int id) {
-    InventoryItem item = inventoryRepository.getProductById(id);
+  public boolean isProductAvailable(int productId) {
+    InventoryItem item = inventoryRepository.getProductById(productId);
     return item != null;
   }
 
-  public int getProductQuantity(int id) throws ValidationException {
-    InventoryItem item = inventoryRepository.getProductById(id);
+  public int getProductQuantity(int productId) throws ValidationException {
+    InventoryItem item = inventoryRepository.getProductById(productId);
     if(item == null)
-      throw new ValidationException("Product id is not valid.");
+      throw new ValidationException("Product Id is not valid.");
 
     return item.getQuantity();
   }

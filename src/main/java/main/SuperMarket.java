@@ -17,45 +17,47 @@ public class SuperMarket {
    */
   public static void main(String[] args) {
 
-    String username;
-    String pass;
-    EmployeeController employeeController = new EmployeeController();
-    do {
-      try {
-        System.out.println("Enter the username: ");
-        username = Globals.input.readLine();
+    new LoginUI().run();
 
-        if (username.equals("0")) {
-          System.exit(1);
-        }
-
-        System.out.println("Enter the password: ");
-        pass = Globals.input.readLine();
-
-      } catch (IOException e) {
-        e.printStackTrace();
-        break;
-      }
-      try {
-        Employee emp = employeeController.authenticate(username, pass);
-        if (emp instanceof Manager) {
-          new ManagerUI().menu();
-          employeeController.logout();
-        } else if (emp instanceof Biller) {
-          new BillerUI().menu();
-          employeeController.logout();
-        } else if (emp instanceof sdk.employee.FloorStaff) {
-          new FloorStaffUI().menu();
-          employeeController.logout();
-        } else if (emp instanceof sdk.employee.Cashier) {
-          new CashierUI().menu();
-          employeeController.logout();
-        } else if (emp instanceof sdk.employee.Delivery) new DeliveryUI().menu();
-        employeeController.logout();
-
-      } catch (IllegalArgumentException e) {
-        System.out.println("Credentials incorrect");
-      }
-    } while (true);
+//    String username;
+//    String pass;
+//    EmployeeController employeeController = new EmployeeController();
+//    do {
+//      try {
+//        System.out.println("Enter the username: ");
+//        username = Globals.input.readLine();
+//
+//        if (username.equals("0")) {
+//          System.exit(1);
+//        }
+//
+//        System.out.println("Enter the password: ");
+//        pass = Globals.input.readLine();
+//
+//      } catch (IOException e) {
+//        e.printStackTrace();
+//        break;
+//      }
+//      try {
+//        Employee emp = employeeController.authenticate(username, pass);
+//        if (emp instanceof Manager) {
+//          new ManagerUI().menu();
+//          employeeController.logout();
+//        } else if (emp instanceof Biller) {
+//          new BillerUI().menu();
+//          employeeController.logout();
+//        } else if (emp instanceof sdk.employee.FloorStaff) {
+//          new FloorStaffUI().menu();
+//          employeeController.logout();
+//        } else if (emp instanceof sdk.employee.Cashier) {
+//          new CashierUI().menu();
+//          employeeController.logout();
+//        } else if (emp instanceof sdk.employee.Delivery) new DeliveryUI().menu();
+//        employeeController.logout();
+//
+//      } catch (IllegalArgumentException e) {
+//        System.out.println("Credentials incorrect");
+//      }
+//    } while (true);
   }
 }

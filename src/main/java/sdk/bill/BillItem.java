@@ -13,7 +13,6 @@ public class BillItem {
     this.product = product;
     this.quantity = quantity;
     this.price = quantity * product.getPrice();
-    price = Math.round(price * 100.0) / 100.0;
   }
 
   public Product getProduct() {
@@ -30,7 +29,6 @@ public class BillItem {
 
   public double getPrice() {
     price = quantity * product.getPrice();
-    price = Math.round(price * 100.0) / 100.0;
     return price;
   }
 }
