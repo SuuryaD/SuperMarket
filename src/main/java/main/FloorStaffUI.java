@@ -1,6 +1,7 @@
 package main;
 
-import sdk.inventory.InventoryController;
+import sdk.employee.domain.Employee;
+import sdk.inventory.controller.InventoryController;
 import sdk.util.ValidationException;
 
 import java.io.IOException;
@@ -8,9 +9,10 @@ import java.io.IOException;
 public class FloorStaffUI {
 
   private final InventoryController inventoryController;
-
-  public FloorStaffUI() {
-    inventoryController = new InventoryController();
+  private final Employee emp;
+  public FloorStaffUI(Employee emp) {
+    inventoryController = new InventoryController(emp);
+    this.emp = emp;
   }
 
   public void menu() {

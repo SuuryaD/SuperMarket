@@ -1,12 +1,10 @@
 package sdk.util;
 
-import sdk.employee.Employee;
+import sdk.employee.domain.Employee;
 
 import java.util.ArrayList;
 
 public class Globals {
-
-  public static Employee currentEmployee;
 
   public static String printTable(ArrayList<String> headers, ArrayList<ArrayList<String>> table) {
 

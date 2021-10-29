@@ -1,6 +1,7 @@
 # Super Market
 
-A java console application to manage a supermarket's operations like managing inventory, billing, employees, customers and Payments.
+A java console application to manage a supermarket's operations like managing inventory, billing, employees, customers
+and Payments.
 
 Run the application by running [HyperMarket](src/main/java/main/HyperMarket.java).
 
@@ -11,11 +12,13 @@ The application has 2 modes of operations, Cashier and admin mode.
 ## Application Features
 
 ### User
-* Generate new bills 
+
+* Generate new bills
 * View all the products in the inventory
 * can add new customers
 
 ### Admin
+
 * Add new Employee to the supermarket
 * Remove an Employee from supermarket
 * View all the employees in the supermarket
@@ -24,7 +27,6 @@ The application has 2 modes of operations, Cashier and admin mode.
 * Restock Existing products in the inventory
 * View all previous bills
 * View all Customers details
-
 
 ## User input instructions
 

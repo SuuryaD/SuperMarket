@@ -1,12 +1,17 @@
 package main;
 
-import sdk.bill.BillController;
-import sdk.customer.CustomerController;
-import sdk.employee.EmployeeController;
-import sdk.inventory.InventoryController;
+import sdk.bill.BillDetails;
+import sdk.bill.controller.BillControllerImpl;
+import sdk.customer.Customer;
+import sdk.customer.controller.CustomerController;
+import sdk.employee.controller.EmployeeController;
+import sdk.employee.domain.Employee;
+import sdk.inventory.controller.InventoryController;
 import sdk.util.ValidationException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /** Contains all the functionality of an admin */
@@ -14,15 +19,16 @@ public class ManagerUI {
 
   private final InventoryController inventoryController;
   private final EmployeeController employeeController;
-  private final BillController billController;
+  private final BillControllerImpl billController;
   private final CustomerController customerController;
+  private final Employee emp;
 
-  public ManagerUI() {
-
-    inventoryController = new InventoryController();
-    employeeController = new EmployeeController();
-    billController = new BillController();
-    customerController = new CustomerController();
+  public ManagerUI(Employee emp) {
+    this.emp = emp;
+    inventoryController = new InventoryController(emp);
+    employeeController = new EmployeeController(emp);
+    billController = new BillControllerImpl(emp);
+    customerController = new CustomerController(emp);
   }
 
   /** Displays all the options for admin */
@@ -78,15 +84,12 @@ public class ManagerUI {
       }
     } while (true);
   }
-
+//TODO
   private void viewAllEmployees() {
     System.out.println(employeeController.printAllEmployees());
   }
-  /**
-   * Adds a new employee to the employee list.
-   *
-   * @throws IOException raised when invalid input is provided
-   */
+
+
   private void addEmployee() throws IOException {
 
     String name, username, pass, choice;
@@ -109,6 +112,7 @@ public class ManagerUI {
       choice = Globals.input.readLine();
       if (choice.equals("0")) return;
       try {
+        //TODO try with callback
         if (employeeController.addEmployee(name, username, pass, Integer.parseInt(choice))) {
           System.out.println("Employee added successfully");
           break;
@@ -232,15 +236,14 @@ public class ManagerUI {
    * @throws IOException input error.
    */
   private void viewAllBills() throws IOException {
-    viewBills(billController.displayAllBills());
+    viewBills(billController.getAllBills());
   }
 
   /** Displays all customer details in a tabular form */
   private void viewAllCustomers() throws IOException {
 
     do {
-
-      System.out.println(customerController.displayAllCustomers());
+      System.out.println(printCustomerTable(customerController.getAllCustomers()));
       System.out.println("0. exit");
       System.out.println("1. View Customer bills");
       String option = Globals.input.readLine();
@@ -252,7 +255,7 @@ public class ManagerUI {
           String id = Globals.input.readLine();
           if (id.equals("0")) return;
           try {
-            viewBills(billController.displayCustomerBill(Integer.parseInt(id)));
+            viewBills(customerController.getBillsOfCustomer(Integer.parseInt(id)));
           } catch (NumberFormatException | IndexOutOfBoundsException e) {
             System.out.println("Enter a valid serial number");
           }
@@ -260,16 +263,42 @@ public class ManagerUI {
         default:
           System.out.println("Enter a valid input");
       }
-
     } while (true);
   }
 
+  private String printCustomerTable(List<Customer> ls){
+    ArrayList<String> headers = new ArrayList<>();
+    ArrayList<ArrayList<String>> content = new ArrayList<>();
+    headers.add("S.No");
+    headers.add("Customer id");
+    headers.add("Customer name");
+    headers.add("Customer address");
+    headers.add("No of purchases");
+    headers.add("Total Purchase amount");
+    int no = 1;
+    for (Customer customer : ls) {
+      content.add(
+          new ArrayList<>(
+              Arrays.asList(
+                  String.valueOf(no),
+                  String.valueOf(customer.getId()),
+                  customer.getName(),
+                  customer.getAddress(),
+                  String.valueOf(customerController.getTotalPurchaseOfCustomer(customer.getId())),
+                  String.valueOf(customerController.getNoOfBillsOfCustomer(customer.getId()))
+//                  String.valueOf(billService.getNoOfBillsOfCustomer(customer.getId())),
+//                  String.valueOf(billService.getTotalPurchaseOfCustomer(customer.getId()))
+              )));
+      no++;
+    }
+    return sdk.util.Globals.printTable(headers, content);
+  }
   /**
    * Displays all the bills
    *
    * @throws IOException invalid input
    */
-  private void viewBills(List<String> ls) throws IOException {
+  private void viewBills(List<BillDetails> ls) throws IOException {
 
     if (ls.isEmpty()) {
       System.out.println("No bills available");

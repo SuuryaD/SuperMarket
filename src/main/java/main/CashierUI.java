@@ -1,7 +1,10 @@
 package main;
 
-import sdk.bill.BillController;
+import sdk.bill.controller.BillController;
+import sdk.employee.domain.Employee;
+import sdk.payment.Payment;
 import sdk.payment.PaymentController;
+import sdk.util.Factory;
 import sdk.util.ValidationException;
 
 import java.io.IOException;
@@ -9,9 +12,13 @@ import java.io.IOException;
 public class CashierUI {
 
   private final PaymentController paymentController;
-
-  public CashierUI() {
+  private final BillController billController;
+  private Payment payment;
+  private final Employee emp;
+  public CashierUI(Employee emp) {
+    this.emp = emp;
     this.paymentController = new PaymentController();
+    billController = Factory.createBillController(emp);
   }
 
   public void menu() {
@@ -46,7 +53,7 @@ public class CashierUI {
     String billId = Globals.input.readLine();
     if (billId.equals("0")) return;
     try {
-      new BillController().cancelBill(Integer.parseInt(billId));
+      billController.cancelBill(Integer.parseInt(billId));
     } catch (ValidationException e) {
       System.out.println(e.getMessage());
     }
@@ -61,7 +68,11 @@ public class CashierUI {
       int billId;
       try {
         billId = Integer.parseInt(id);
-        System.out.println(new BillController().printBill(billId));
+        if (billController.isPaid(billId)) {
+          System.out.println("Bill is already paid");
+          return;
+        }
+        System.out.println(billController.getBill(billId));
       } catch (NumberFormatException e) {
         System.out.println("Enter a valid number");
         return;
@@ -89,12 +100,14 @@ public class CashierUI {
   }
 
   private void makePaymentWithUpi(int billId) throws IOException {
+
     do {
       System.out.println("Enter the upi id (0 to exit)");
       String upiId = Globals.input.readLine();
       if (upiId.equals("0")) return;
       try {
-        if (paymentController.payWithUpi(upiId, billId)) {
+        payment = Factory.createUpiPayment(upiId, billId);
+        if (payment.pay()) {
           System.out.println("Payment Successful. Thank you");
           return;
         }
@@ -109,18 +122,20 @@ public class CashierUI {
     do {
       System.out.println("Enter the card Number (1111-1111-1111-1111): ");
       String cardNumber = Globals.input.readLine();
-      if(cardNumber.equals("0"))
-        return;
+      if (cardNumber.equals("0")) return;
       System.out.println("Enter the Name on card");
       String name = Globals.input.readLine();
-      if(name.equals("0"))
-        return;
+      if (name.equals("0")) return;
       System.out.println("Enter the expiry date (MM-YY):");
       String date = Globals.input.readLine();
-      if(date.equals("0"))
-        return;
+      if (date.equals("0")) return;
       try {
-        if (paymentController.payWitchCard(cardNumber, name, date, billId)) {
+        //        if (paymentController.payWitchCard(cardNumber, name, date, billId)) {
+        //          System.out.println("Payment Successful. Thank You!");
+        //          return;
+        //        }
+        payment = Factory.createCreditCardPayment(cardNumber, name, date, billId);
+        if (payment.pay()) {
           System.out.println("Payment Successful. Thank You!");
           return;
         }

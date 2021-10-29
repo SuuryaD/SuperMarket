@@ -1,5 +1,2 @@
-/**
- * Contains all the classes relevant to the inventory
- */
-
+/** Contains all the classes relevant to the inventory */
 package sdk.inventory;
