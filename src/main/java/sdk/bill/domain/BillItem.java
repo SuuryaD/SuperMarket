@@ -31,5 +31,4 @@ public class BillItem {
     price = quantity * product.getPrice();
     return price;
   }
-
 }

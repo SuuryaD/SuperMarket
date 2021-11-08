@@ -10,7 +10,7 @@ public abstract class Employee {
   private final String name;
   private final String username;
 
-  public Employee(String name, String username){
+  public Employee(String name, String username) {
     this.id = NUMBER;
     NUMBER++;
     this.name = name;

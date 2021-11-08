@@ -2,6 +2,7 @@ package sdk.employee.repository;
 
 import org.mindrot.jbcrypt.BCrypt;
 import sdk.employee.domain.*;
+import sdk.util.Factory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 
   public EmployeeRepositoryImpl() {
     this.employeeList = new ArrayList<>();
-    employeeLoginRepository = EmployeeLoginRepository.getInstance();
+    employeeLoginRepository = Factory.createEmployeeLoginRepository();
     initializeRepo();
   }
 
@@ -72,7 +73,6 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     return null;
   }
 
-
   @Override
   public Employee getEmployeeById(int employeeId) {
     for (Employee emp : employeeList) {
@@ -87,10 +87,11 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
   }
 
   private void initializeRepo() {
-    addManagerEmployee("surya","manager1", BCrypt.hashpw("Manager@1",BCrypt.gensalt(10)));
-    addBillerEmployee("surya", "biller1", BCrypt.hashpw("Biller@1",BCrypt.gensalt(10)));
-    addDeliveryEmployee("surya", "delivery1", BCrypt.hashpw("Delivery@1",BCrypt.gensalt(10)));
-    addCashierEmployee("surya", "cashier1", BCrypt.hashpw("Cashier@1",BCrypt.gensalt(10)));
-    addFloorStaffEmployee("surya", "floorstaff1", BCrypt.hashpw("Floorstaff@1",BCrypt.gensalt(10)));
+    addManagerEmployee("surya", "manager1", BCrypt.hashpw("Manager@1", BCrypt.gensalt(10)));
+    addBillerEmployee("surya", "biller1", BCrypt.hashpw("Biller@1", BCrypt.gensalt(10)));
+    addDeliveryEmployee("surya", "delivery1", BCrypt.hashpw("Delivery@1", BCrypt.gensalt(10)));
+    addCashierEmployee("surya", "cashier1", BCrypt.hashpw("Cashier@1", BCrypt.gensalt(10)));
+    addFloorStaffEmployee(
+        "surya", "floorstaff1", BCrypt.hashpw("Floorstaff@1", BCrypt.gensalt(10)));
   }
 }

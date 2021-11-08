@@ -4,6 +4,9 @@ import sdk.bill.domain.Bill;
 
 import java.util.List;
 
+/**
+ * Database handling for the bill table
+ */
 public interface BillRepository {
 
   List<Bill> getAllBills();

@@ -2,6 +2,7 @@ package sdk.bill.domain;
 
 import sdk.inventory.domain.Product;
 import sdk.util.Globals;
+import sdk.util.ValidationException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -44,9 +45,10 @@ public class Bill {
     paid = true;
   }
 
-  public long getBillingTime(){
+  public long getBillingTime() {
     return billingTime;
   }
+
   public boolean isPaid() {
     return paid;
   }
@@ -87,13 +89,13 @@ public class Bill {
     }
   }
 
-  public int getQuantity(int productId) {
+  public Integer getQuantity(int productId){
     for (BillItem item : billItems) {
       if (item.getProduct().getId() == productId) {
         return item.getQuantity();
       }
     }
-    return 0;
+    return null;
   }
 
   public void addNewItem(Product product, int quantity) {

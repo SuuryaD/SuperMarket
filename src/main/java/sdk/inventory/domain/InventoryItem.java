@@ -1,7 +1,5 @@
 package sdk.inventory.domain;
 
-import sdk.inventory.domain.Product;
-
 /** class contains details of an item in inventory. */
 public class InventoryItem {
 

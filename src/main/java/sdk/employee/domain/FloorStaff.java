@@ -1,7 +1,6 @@
 package sdk.employee.domain;
 
 import sdk.employee.Visitor;
-import sdk.employee.domain.Employee;
 
 public class FloorStaff extends Employee {
 

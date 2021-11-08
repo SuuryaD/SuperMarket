@@ -1,7 +1,5 @@
 package sdk.util;
 
-import sdk.employee.domain.Employee;
-
 import java.util.ArrayList;
 
 public class Globals {

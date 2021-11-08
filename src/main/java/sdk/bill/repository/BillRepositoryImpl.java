@@ -5,6 +5,9 @@ import sdk.bill.domain.Bill;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Database class for the bill table
+ */
 public class BillRepositoryImpl implements BillRepository {
 
   private final List<Bill> bills;

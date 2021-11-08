@@ -5,7 +5,7 @@ import sdk.customer.Customer;
 import java.util.ArrayList;
 import java.util.List;
 
-/** static class contains the list of customers. */
+/**Database class contains all the customers. */
 public class CustomerRepositoryImpl implements CustomerRepository {
 
   private static CustomerRepositoryImpl instance;

@@ -3,14 +3,19 @@ package sdk.employee.service;
 import sdk.employee.domain.Employee;
 import sdk.util.ValidationException;
 
+import java.util.List;
+
 public interface EmployeeService {
 
-  Boolean addEmployee(String employeeName, String username, String pass, int employeeType)
-      throws ValidationException;
+  Boolean addEmployee(String employeeName, String username, String pass, int employeeType);
 
-  boolean removeEmployee(int employeeId) throws ValidationException;
+  boolean removeEmployee(int employeeId);
 
   Employee authenticate(String username, String pass);
 
-  String displayAllEmployees();
+  List<Employee> getAllEmployees();
+
+  boolean isEmployeeAvailable(String username);
+
+  boolean isEmployeeAvailable(int employeeId);
 }
